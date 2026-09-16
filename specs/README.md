@@ -28,9 +28,11 @@ Este diretório contém o contrato necessário para compreender e modificar o so
 | Tema | Ler |
 |---|---|
 | Estrutura do app e componentes | `capabilities/core.md` |
+| Login e autenticação simulada | `capabilities/authentication.md` |
+| Cadastro local de clientes | `capabilities/registration.md` |
 | Stack, entrypoints, execução | `system.md` |
 | Testes e evidências | `testing.md` |
-| Tema/escopo do produto ainda indefinido | `open-decisions.md` |
+| Decisões administrativas ainda abertas | `open-decisions.md` |
 
 ## Manutenção
 

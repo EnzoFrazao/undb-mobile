@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app-mobile",
-    "slug": "app-mobile",
+    "name": "Diário de Obra Mobile",
+    "slug": "diario-de-obra-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

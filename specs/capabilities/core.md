@@ -1,8 +1,8 @@
 ---
 id: core
-contract_status: partial
-implementation_status: partial
-last_verified: 2026-08-26
+contract_status: implemented
+implementation_status: implemented
+last_verified: 2026-09-16
 last_verified_ref: working-tree
 ---
 
@@ -11,13 +11,14 @@ last_verified_ref: working-tree
 ## Finalidade e limites
 
 Garantir que o app inicie no Expo Go e que a UI seja montada a partir de componentes isolados na
-convenção exigida pela disciplina. Funcionalidade de produto não pertence a esta capability e ainda
-não foi definida — ver `P-001` em `../open-decisions.md`.
+convenção exigida pela disciplina. A primeira funcionalidade de produto está registrada em
+`authentication.md`.
 
 ## Atores, permissões, entradas e resultados
 
-O desenvolvedor roda o projeto e vê a tela inicial no aparelho ou emulador. Não há autenticação,
-entrada de usuário nem permissões de sistema.
+O desenvolvedor roda o projeto e vê a tela de login no aparelho ou emulador. Pode abrir o cadastro
+de Cliente, voltar ao login e, depois de autenticar, ver a tela de boas-vindas do perfil e sair. Não
+há permissões de sistema, navegação por biblioteca ou integração externa.
 
 ## Contrato comportamental e critérios de aceite
 
@@ -33,19 +34,19 @@ entrada de usuário nem permissões de sistema.
 
 ## Estado atual e lacunas
 
-Implementado: scaffold Expo, `components/Header/` como referência da convenção, e `App.js`
-renderizando `<Header />`.
+Implementado: scaffold Expo, tokens visuais, `Header`, `LoginScreen`, `RegisterScreen`,
+`WelcomeScreen` e `App.js` compondo o fluxo local de cadastro e autenticação simulada.
 
-Lacuna: nenhum componente de produto existe, porque o tema do app não foi definido. `Header` é
-demonstração e deve ser substituído ou adaptado quando o escopo chegar.
+Lacuna: a execução em aparelho físico ainda depende de validação manual no Expo Go.
 
 ## Evidências de implementação e teste
 
-- Implementação: `app-mobile/App.js`, `app-mobile/components/Header/index.js`,
-  `app-mobile/components/Header/styles.js`.
+- Implementação: `app-mobile/App.js`, `app-mobile/components/**`, `app-mobile/theme/tokens.js`.
 - Evidência de bundle: ver `../testing.md`.
 
 ## Relações
 
-- Decisão aberta: `P-001` e `P-002`, em `../open-decisions.md`.
+- Capability relacionada: `authentication.md`.
+- Capability relacionada: `registration.md`.
+- Decisão aberta: `P-002`, em `../open-decisions.md`.
 - ADR relacionado: nenhum na última verificação.

@@ -1,38 +1,55 @@
+import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
-import Header from './components/Header';
+import LoginScreen from './components/LoginScreen';
+import RegisterScreen from './components/RegisterScreen';
+import WelcomeScreen from './components/WelcomeScreen';
+import { mockUsers } from './data/mockUsers';
 
 export default function App() {
+  const [users, setUsers] = useState(() => [...mockUsers]);
+  const [authenticatedUser, setAuthenticatedUser] = useState(null);
+  const [currentScreen, setCurrentScreen] = useState('login');
+  const [loginFeedback, setLoginFeedback] = useState('');
+
+  function handleAuthenticated(user) {
+    setLoginFeedback('');
+    setAuthenticatedUser(user);
+  }
+
+  function handleRegistered(user) {
+    setUsers((currentUsers) => [...currentUsers, user]);
+    setLoginFeedback('Cadastro realizado. Entre com seu e-mail e senha.');
+    setCurrentScreen('login');
+  }
+
+  function handleLogout() {
+    setAuthenticatedUser(null);
+    setCurrentScreen('login');
+  }
+
   return (
-    <View style={styles.container}>
-      <Header title="App Mobile" />
-      <View style={styles.content}>
-        <Text style={styles.text}>
-          Projeto iniciado. Novos componentes vao em components/, cada um com
-          index.js e styles.js.
-        </Text>
-      </View>
+    <>
+      {authenticatedUser ? (
+        <WelcomeScreen user={authenticatedUser} onLogout={handleLogout} />
+      ) : currentScreen === 'register' ? (
+        <RegisterScreen
+          users={users}
+          onRegistered={handleRegistered}
+          onLoginPress={() => setCurrentScreen('login')}
+        />
+      ) : (
+        <LoginScreen
+          users={users}
+          notice={loginFeedback}
+          onAuthenticated={handleAuthenticated}
+          onRegisterPress={() => {
+            setLoginFeedback('');
+            setCurrentScreen('register');
+          }}
+        />
+      )}
       <StatusBar style="light" />
-    </View>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  text: {
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'center',
-    color: '#3C3C4399',
-  },
-});
