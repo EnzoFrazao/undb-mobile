@@ -1,5 +1,14 @@
 # Marcos do projeto
 
+## 2026-10-07 — aplicação com API e JSON
+
+- Escopo ampliado pelo usuário para sistema do PDF; backend JSON escolhido explicitamente.
+- Cadastro persistente, sessão revogável e senhas com scrypt substituem autenticação mock no app.
+- Obras, vínculos, fotos, relatórios/calendário, revisão, assinatura acadêmica e histórico implementados.
+- Welcome preservada; guia inicial por perfil, privacidade, FAQ e UI mobile com safe area.
+- ADR002 registra persistência, operação de instância única e limites de assinatura/imutabilidade.
+- Conta/pasta `.idea` do usuário preservadas; armazenamento local e fotos não entram no Git.
+
 ## 2026-09-16 — cadastro local de clientes
 
 - `RegisterScreen` adicionada com nome, e-mail, senha e confirmação de senha.

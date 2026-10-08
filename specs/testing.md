@@ -1,46 +1,51 @@
-# Estratégia e mapa de testes
+# Estratégia e evidências de testes
 
-**Última verificação:** 2026-09-16
+**Última verificação:** 2026-10-07 · working-tree.
 
-## Situação
-
-Os testes da regra de autenticação usam o runner nativo do Node, sem dependência adicional. A UI
-ainda não possui teste automatizado de interação; sua evidência automatizada são os bundles Android
-e web, complementados por uma inspeção manual no navegador local.
-
-## Gates
-
-| Comando | Evidência | Executado em 2026-09-16 |
-|---|---|---|
-| `npm test` | Autenticação, cadastro de Cliente, validações e mensagens de boas-vindas | Sim — 11 testes, 11 aprovados, exit 0 |
-| `npx expo export --platform android --output-dir .verify-bundle-register-final-3` | Imports, JSX e sintaxe de todos os módulos do app | Sim — `Android Bundled ... index.js (593 modules)`, exit 0 |
-| `npx expo export --platform web --output-dir .verify-web-register-final-3` | Compatibilidade do app com a execução local no navegador | Sim — `Web Bundled ... index.js (212 modules)`, exit 0 |
-| `npx expo-doctor` | Compatibilidade entre configuração e dependências do Expo | Sim — 21 de 21 checks aprovados |
-| `npx expo start --offline` | O dev server sobe e fica pronto para o Expo Go | Sim — QR Code e `exp://192.168.0.7:8081`, exit 0 após encerramento manual |
-| Inspeção manual em `http://127.0.0.1:4173` | Cadastro, retorno ao login, acesso do novo Cliente e boas-vindas | Sim — fluxo completo, links recíprocos e console sem erros ou avisos |
-
-Os diretórios `.verify-bundle*` e `.verify-web*` são artefatos descartáveis e ficam ignorados pelo Git.
-
-## Responsabilidade por camada
-
-| Comportamento | Local |
+| Verificação executada | Resultado |
 |---|---|
-| Composição da tela raiz | `app-mobile/App.js` |
-| Componente de UI e seus estilos | `app-mobile/components/<Nome>/` |
-| Validação e comparação de credenciais | `app-mobile/services/auth.js` |
-| Validação e criação de clientes | `app-mobile/services/registration.js` |
-| Dados fictícios | `app-mobile/data/mockUsers.js` |
+| `app-mobile: npm.cmd test` | 7 testes unitários aprovados, exit0 |
+| `backend: npm.cmd test` | 1 integração completa, dezenas de assertivas HTTP/persistência, aprovada, exit0 |
+| `npx.cmd expo export --platform all --output-dir .verify-bundle-product` | Web251, Android624, iOS627 módulos; exit0 |
+| `npx.cmd expo-doctor` | 21/21 checks aprovados |
+| `git diff --check` | Sem erro de whitespace; apenas avisos LF/CRLF do Windows |
+| API `/api/health` e Metro8081 | status ok e HTTP200 após reiniciar backend |
+| Navegador localhost8081,390x844 e320x740 | Inspeção visual mobile e interação real, sem corte horizontal observado |
 
 ## Mapa por capacidade
 
-| Capability | Arquivos ou globs | Situação |
-|---|---|---|
-| `core` | `app-mobile/App.js`, `app-mobile/components/**` | Implementada; coberta apenas por evidência de bundle |
-| `authentication` | `app-mobile/services/auth.js`, `app-mobile/tests/auth.test.cjs` | Implementada; autenticação estática e em memória |
-| `registration` | `app-mobile/services/registration.js`, `app-mobile/tests/registration.test.cjs` | Implementada; cadastro local de Cliente |
+- Authentication: validação frontend, normalização e welcome unitárias. API testa logins dos perfis,
+  senha incorreta, acesso sem sessão, ausência de passwordHash nas respostas e logout/revogação.
+- Registration: campos/confirmar senha e normalização no app; API força Cliente apesar de payload
+  owner, recusa e-mail duplicado e falta de consentimento e mantém cadastro após restart.
+- Works/reports: criação de responsável e obra, vínculo de novo Cliente, tipos de vínculo inválidos,
+  permissões de escrita, isolamento de obra/foto, upload PNG, data inválida, avanço inválido,
+  foto de outro contrato, unicidade por dia, versão desatualizada, revisão com snapshot anterior,
+  assinatura exclusiva do dono, bloqueio posterior e preservação do hash após restart da API.
+- Arquivo persistido: testes confirmam hashes de senhas/sessões, ausência de plaintext e encadeamento
+  previousHash. Armazenamento de teste usa mkdtemp isolado; não modifica backend/storage real.
 
-## Lacunas
+## Evidência manual no navegador
 
-- Sem teste automatizado de interação com os componentes. Adicionar `jest-expo` e
-  `@testing-library/react-native` quando o projeto ganhar mais fluxos de UI.
-- Sem verificação em aparelho real nesta sessão: abrir no Expo Go continua sendo passo manual.
+Fluxo percorrido: Responsável login→welcome→guia→obra→novo diário→galeria/upload→envio;
+Dono login→revisão/edição→assinatura→controle de edição removido→consulta versão1 preservada;
+Cliente login→somente1obra→calendário/filtro. Cadastro pela interface→login→guia→estado vazio sem obra.
+Login após reload não mostra erro apenas por foco/blur. Backend reiniciado e dados mantidos.
+Uma imagem de teste do próprio projeto foi anexada ao diário de demonstração de07/10/2026;
+não representa fotografia real da obra. Foi criada a conta fictícia teste.interface@example.com.
+Aviso web `style.resizeMode` foi corrigido removendo a propriedade do estilo; props.resizeMode usado.
+
+## Dependências e limites
+
+`npm audit fix` sem force atualizou dependências compatíveis e removeu4 avisos, incluindo o crítico
+shell-quote. Auditoria posterior:22 vulnerabilidades (7moderadas,15altas), herdadas da cadeia Expo/Metro,
+braces, node-forge e uuid/xcode. Correção automática restante propõe Expo44, incompatível com SDK57;
+não aplicada. Não afirmar que o projeto está pronto para produção. Backend tem zero dependências externas.
+
+Não há suite automatizada de interação React Native, teste real de câmera/Expo Go, certificado TLS
+implantado, avaliação jurídica de assinatura/LGPD, testes de carga ou medições em4G. Export Android/iOS
+valida bundle, não execução física. Hash encadeado não equivale a disco imutável contra administrador.
+Polling5s demonstra atualização entre perfis, não garante latência instantânea de RF07.
+
+Artefatos `.verify-bundle*`/`.verify-web*` são ignorados pelo Git. Não remover tests: eles ajudam
+a validar futuras alterações; não são necessários para executar a interface.

@@ -1,6 +1,6 @@
 # ADR 001 — cadastro de Cliente mantido em memória
 
-**Status:** aceito
+**Status:** substituído por `002-backend-json.md` em 2026-10-07
 **Data:** 2026-09-16
 
 ## Contexto

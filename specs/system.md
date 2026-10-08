@@ -1,49 +1,29 @@
 # Sistema implementado
 
-**Última verificação:** 2026-09-16
-**Referência:** `working-tree`
+**Última verificação:** 2026-10-07 · **Referência:** working-tree.
 
-## Finalidade e unidade executável
+React Native 0.86.3 / React 19.2.3 / Expo SDK 57, JavaScript puro. Entrada:
+`app-mobile/index.js` registra `App.js`. `SafeAreaProvider` e `AppFrame` respeitam as áreas seguras;
+canvas web centralizado com largura máxima de 480px. Estilos ficam sempre em `components/<Nome>/styles.js`.
+`expo-image-picker` permite galeria/câmera; não solicita microfone. Navegação usa estado React,
+sem biblioteca adicional. Formulários autenticados ficam em uma ScrollView com barra inferior fixa.
 
-Aplicação híbrida mobile (Android/iOS) da disciplina de Programação Mobile. Roda no Expo Go durante
-o desenvolvimento; não há build nativo neste repositório.
+App chama API por `services/api.js`, com token apenas em memória, timeout de 20s e logout em 401.
+Endereço padrão web: hostname:3001/api; nativo: hostUri do Expo:3001/api; override EXPO_PUBLIC_API_URL.
+Workspace consulta `/state` a cada 5s. Backend filtra dados e valida permissões independentemente da UI.
 
-## Stack e entrypoints
+Backend Node 22 utiliza módulos nativos HTTP/HTTPS, crypto e fs, sem dependências ou banco.
+API: health, register, login, logout, state, guide, consent, operators, works, photos, reports,
+edição e assinatura. CORS possui lista explícita. Sessões opacas com expiração de 8h e revogação;
+hash scrypt nas senhas e SHA-256 nos tokens. Login limitado a 20 tentativas por IP/minuto.
+JSON limitado a 12MB; fotos JPEG/PNG/WebP até 8MB, acessadas apenas por endpoint autenticado.
 
-- Node 22.23.2 / npm 10.9.8 na máquina de desenvolvimento;
-- Expo SDK `~57.0.23`, React Native `0.86.3`, React `19.2.3`, `expo-status-bar ~57.0.1`;
-- JavaScript puro (template `blank`), sem TypeScript;
-- `app-mobile/index.js`: entrada real, chama `registerRootComponent(App)`;
-- `app-mobile/App.js`: componente raiz, mantém usuários locais e alterna entre cadastro, login e boas-vindas;
-- `app-mobile/app.json`: configuração do Expo;
-- `app-mobile/components/`: componentes da UI;
-- `app-mobile/theme/tokens.js`: cores, espaçamento e raios compartilhados;
-- `app-mobile/services/auth.js`: validação e autenticação simulada;
-- `app-mobile/services/registration.js`: validação e criação local de clientes;
-- `app-mobile/data/mockUsers.js`: credenciais fictícias dos três perfis da atividade.
+Store salva JSON via cópia transacional/fsync/rename; fotos privadas no disco. Dados iniciais somente
+quando inexiste data.json. Um processo por diretório; backups manuais. Cadastro público sempre Cliente;
+dono cria responsáveis. Relatórios únicos por obra/data. Revisão usa versão esperada para evitar perda
+de atualização concorrente. Snapshots, autoria e timestamps preservados; assinatura gera hash do conteúdo
+e fotos e bloqueia PATCH. Sem endpoint de exclusão de histórico.
 
-O `package.json` declara `"main": "index.js"` — o entrypoint não é o `App.js` diretamente.
-
-## Fronteiras e fluxo
-
-`index.js` registra `App`. `App` alterna entre `LoginScreen`, `RegisterScreen` e `WelcomeScreen`.
-O cadastro adiciona um Cliente à lista mantida em `useState` e volta ao login. A autenticação usa
-essa lista; `Sair` limpa o usuário autenticado e volta ao formulário. Cada componente importa seu
-`styles.js`. Não há biblioteca de navegação nem estado global.
-
-## Estado, persistência e integrações
-
-Formulários, sessão e novos clientes existem somente em memória durante a execução. O app não
-persiste dados e não chama API. A lista inicial fica em `data/mockUsers.js`; recarregar ou fechar o
-aplicativo descarta os cadastros adicionais.
-
-## Restrições e lacunas
-
-- Sem biblioteca de navegação instalada porque a troca entre cadastro, login e boas-vindas usa
-  apenas estado local. Escolher uma biblioteca quando forem implementadas áreas maiores.
-- Sem `react-native-safe-area-context`; o cabeçalho reserva espaço superior fixo e deve migrar para
-  safe area real quando houver navegação.
-- `expo-cli` global não foi instalado (pacote legado). Todo comando roda via `npx`.
-- `npm install` reportou 10 vulnerabilidades moderadas herdadas do template; nenhuma correção foi
-  aplicada para não divergir do template distribuído pela disciplina.
-- A autenticação é somente um mock frontend e não deve receber credenciais reais.
+HTTP apenas desenvolvimento. TLS_KEY/TLS_CERT habilitam HTTPS; deploy, certificado válido, proteção
+administrativa de arquivos, assinatura certificada, carga/4G e validação física ainda não entregues.
+Ver ADR 002, capabilities e testing.md. A implementação não garante imutabilidade forte do disco.

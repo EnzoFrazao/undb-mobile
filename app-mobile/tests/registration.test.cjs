@@ -1,29 +1,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { mockUsers } = require('../data/mockUsers');
 const {
-  createClientUser,
   normalizeName,
   validateRegistrationFields,
 } = require('../services/registration');
 
-test('normaliza o nome e cria sempre um usuário Cliente', () => {
+test('normaliza o nome', () => {
   assert.equal(normalizeName('  Maria   da Silva  '), 'Maria da Silva');
-  assert.deepEqual(
-    createClientUser({
-      name: '  Maria   da Silva  ',
-      email: '  MARIA@EMAIL.COM  ',
-      password: 'abcdef',
-    }),
-    {
-      email: 'maria@email.com',
-      password: 'abcdef',
-      name: 'Maria da Silva',
-      role: 'client',
-      roleLabel: 'Cliente',
-    },
-  );
 });
 
 test('valida campos obrigatórios, tamanho e confirmação da senha', () => {
@@ -65,7 +49,7 @@ test('recusa e-mail que já possui cadastro', () => {
         password: '123456',
         passwordConfirmation: '123456',
       },
-      mockUsers,
+      [{ email: 'cliente@diariodeobra.com.br' }],
     ),
     {
       email: 'Este e-mail já possui cadastro. Faça login para continuar.',

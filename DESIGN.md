@@ -37,6 +37,11 @@ leitura principal.
 - `LoginScreen`: formulário responsivo com estados de foco, erro e carregamento.
 - `RegisterScreen`: cadastro de Cliente com nome, e-mail, senha e confirmação de senha.
 - `WelcomeScreen`: confirmação do acesso, perfil identificado, mensagem contextual e ação de sair.
+- `Workspace`: cabeçalho compacto, dashboard, lista de obras e navegação inferior Obras/Conta.
+- `Calendar`: grade mensal com indicadores e filtro de data.
+- `ReportEditor`/`ReportDetail`: registro, fotos, leitura, assinatura e versões.
+- `WorkEditor`: contrato e vínculos. `FormField`, `Choice`, `ActionButton`: controles compartilhados.
+- `AppFrame`: safe area e canvas mobile centralizado no PC (máximo480px).
 
 ## Interaction
 

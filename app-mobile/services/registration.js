@@ -40,18 +40,7 @@ function validateRegistrationFields(
   return errors;
 }
 
-function createClientUser({ name, email, password }) {
-  return {
-    email: normalizeEmail(email),
-    password,
-    name: normalizeName(name),
-    role: 'client',
-    roleLabel: 'Cliente',
-  };
-}
-
 module.exports = {
-  createClientUser,
   normalizeName,
   validateRegistrationFields,
 };

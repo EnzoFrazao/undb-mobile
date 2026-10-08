@@ -12,10 +12,9 @@ associado à credencial.
 
 ## Product Purpose
 
-O Diário de Obra Mobile digitaliza o registro e o acompanhamento do andamento de obras. A primeira
-entrega contempla cadastro local de clientes, login funcional e tela de boas-vindas, com validação,
-feedback de erro e identificação simulada dos três perfis, sem backend ou persistência de
-credenciais reais.
+O Diário de Obra Mobile digitaliza registros e acompanhamento de obras. A entrega acadêmica usa
+backend Node com JSON, cadastro persistente, obras vinculadas, relatórios com fotos e calendário,
+revisão/assinatura pelo dono e consulta restrita por cliente. Assinatura acadêmica não certificada.
 
 ## Brand Personality
 
@@ -36,7 +35,7 @@ em campo, sem parecer um sistema administrativo pesado.
 - Identificar o perfil pela credencial, sem permitir que o usuário escolha permissões na interface.
 - Criar todo cadastro público com o perfil Cliente, sem expor escolha de permissões.
 - Confirmar o acesso com uma mensagem coerente com o perfil identificado.
-- Separar claramente o mock acadêmico de uma autenticação segura de produção.
+- Separar claramente a demonstração acadêmica dos requisitos operacionais e jurídicos de produção.
 - Manter componentes pequenos e compatíveis com a convenção ensinada na disciplina.
 
 ## Accessibility & Inclusion

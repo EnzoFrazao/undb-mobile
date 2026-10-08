@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [["expo-image-picker", { "photosPermission": "Permitir selecionar fotos para o diário da obra.", "cameraPermission": "Permitir fotografar o andamento da obra.", "microphonePermission": false }]],
     "ios": {
       "supportsTablet": true
     },

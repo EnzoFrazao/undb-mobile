@@ -1,1 +1,4 @@
 /tmp/
+/backend/storage/
+*.pem
+*.key

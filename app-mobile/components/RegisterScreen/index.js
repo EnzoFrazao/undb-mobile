@@ -11,14 +11,14 @@ import {
 } from 'react-native';
 
 import Header from '../Header';
+import Choice from '../Choice';
 import {
-  createClientUser,
   validateRegistrationFields,
 } from '../../services/registration';
 import { colors } from '../../theme/tokens';
 import styles from './styles';
 
-export default function RegisterScreen({ users, onRegistered, onLoginPress }) {
+export default function RegisterScreen({ onRegistered, onLoginPress }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,6 +26,9 @@ export default function RegisterScreen({ users, onRegistered, onLoginPress }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [errors, setErrors] = useState({});
+  const [consent, setConsent] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [busy, setBusy] = useState(false);
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const confirmationInputRef = useRef(null);
@@ -54,18 +57,23 @@ export default function RegisterScreen({ users, onRegistered, onLoginPress }) {
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
+    if (busy) return;
     Keyboard.dismiss();
 
     const fields = { name, email, password, passwordConfirmation };
-    const nextErrors = validateRegistrationFields(fields, users);
+    const nextErrors = validateRegistrationFields(fields);
+    if (!consent) nextErrors.consent = 'Confirme o consentimento para criar sua conta.';
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
       return;
     }
 
-    onRegistered(createClientUser(fields));
+    setBusy(true); setFormError('');
+    try { await onRegistered({ ...fields, consent }); }
+    catch (error) { setFormError(error.message); if (error.fields) setErrors(error.fields); }
+    finally { setBusy(false); }
   }
 
   return (
@@ -241,8 +249,12 @@ export default function RegisterScreen({ users, onRegistered, onLoginPress }) {
               ) : null}
             </View>
 
+            <Choice label="Concordo com o uso do meu nome e e-mail para identificação e acesso às minhas obras." selected={consent} onPress={() => { setConsent(!consent); setErrors((previous) => ({ ...previous, consent: undefined })); }} />
+            {errors.consent ? <Text style={styles.fieldError}>{errors.consent}</Text> : null}
+            {formError ? <Text style={styles.fieldError} accessibilityRole="alert">{formError}</Text> : null}
             <Pressable
               onPress={handleSubmit}
+              disabled={busy}
               style={({ pressed }) => [
                 styles.submitButton,
                 pressed && styles.submitButtonPressed,
@@ -251,13 +263,14 @@ export default function RegisterScreen({ users, onRegistered, onLoginPress }) {
               accessibilityLabel="Criar conta"
               accessibilityHint="Cria uma conta local com o perfil Cliente"
             >
-              <Text style={styles.submitButtonText}>Criar conta</Text>
+              <Text style={styles.submitButtonText}>{busy ? 'Criando conta...' : 'Criar conta'}</Text>
             </Pressable>
 
             <View style={styles.switchRow}>
               <Text style={styles.switchPrompt}>Já possui uma conta?</Text>
               <Pressable
                 onPress={onLoginPress}
+                disabled={busy}
                 style={({ pressed }) => [
                   styles.switchLink,
                   pressed && styles.switchLinkPressed,

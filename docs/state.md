@@ -1,38 +1,17 @@
-# Estado do projeto
+# Handoff local — 2026-10-07
 
-## Visão atual
-Projeto da disciplina de Programação Mobile (UNDB): aplicação híbrida em React Native + Expo.
-O `app-mobile/` possui cadastro local de clientes, login e tela de boas-vindas do Diário de Obra
-Mobile, com autenticação simulada para dono/empresa, responsável e cliente.
+Fonte de verdade: specs/README.md, capabilities, system.md e testing.md.
 
-## Pendências
-- [ ] Registrar os 5 integrantes do grupo (P-002)
-- [ ] Testar no aparelho: `npx expo start` e ler o QR com o Expo Go (não dá para validar daqui)
-- [ ] Escolher biblioteca de navegação quando surgirem áreas reais além do fluxo de autenticação
+Produto acadêmico agora integrado à API Node com JSON por autorização do usuário. UI mobile
+inclui login/cadastro, welcome, onboarding, obras/vínculos, diário/fotos, calendário, revisão/assinatura
+e consulta restrita de Cliente. ADR002 substitui estado useState para dados persistentes.
 
-## Decisões importantes
-- **`expo-cli` global não foi instalado**, apesar de o material da disciplina mandar rodar
-  `npm install -g expo-cli`. Esse pacote está descontinuado; o Expo atual usa CLI local via `npx`.
-  Todos os comandos do projeto usam `npx` e o resultado é o mesmo. Não "consertar" instalando o global.
-- **O repositório Git agora fica na raiz `mobileUNDB/`**, incluindo código, especificações e
-  documentação no mesmo controle de versão.
-- **Recuo do topo do Header ainda é fixo**, não safe-area de verdade:
-  `react-native-safe-area-context` não vem no template `blank`. Trocar quando entrar navegação.
-- Nome do projeto passado como argumento no `create-expo-app` para evitar o prompt interativo.
+Backend e Metro foram iniciados para visualizar no PC em localhost3001 e localhost8081.
+Reiniciar conforme README usando dois terminais. Fotos e JSON privados ignorados no Git;
+`.idea/` é arquivo preexistente do usuário e foi preservado. Publicação na branch main solicitada
+pelo usuário; consulte o histórico Git para o commit e a confirmação de sincronização remota.
 
-## Última sessão (2026-09-16, Codex)
-
-- Adaptei o login ao documento de requisitos do Diário de Obra Mobile.
-- Três credenciais fictícias identificam dono/empresa, responsável e cliente no frontend.
-- A tela de boas-vindas foi restaurada e exibe uma mensagem diferente para cada perfil.
-- A ação `Sair` volta ao login sem persistir a sessão.
-- Novos cadastros recebem o perfil Cliente e permanecem somente no `useState` da execução atual.
-- Falta somente conferir a aparência e o teclado em um aparelho real com Expo Go.
-
-## Última sessão (2026-08-26, Claude)
-- Reorganizei `undb/`: documentos foram para `docs/papers/` (o .docx e o .pdf do 1º check de IHC),
-  e o código da disciplina passa a viver em `programacao-mobile/`.
-- Criei o projeto Expo `app-mobile` (SDK 57, RN 0.86.3, JS puro) e a pasta `components/` na convenção
-  exigida — `components/Header/` com `index.js` e `styles.js` separados, já renderizado pelo `App.js`.
-- Verifiquei de fato: bundle Android compilou (582 módulos, exit 0) e `npx expo start` ficou pronto
-  em `localhost:8081`. Falta só o teste no aparelho com Expo Go.
+Verificados testes unitários/API, bundles web/Android/iOS e Doctor21/21. Inspeção browser390x844/320x740.
+Pendências externas:5integrantes(P-002), aparelho real/Expo Go/câmera, HTTPS publicado,
+garantias jurídicas/imutabilidade forte e medidas de desempenho/carga.22 avisos de dependências
+Expo/Metro restantes; não fazer downgrade com audit fix --force. Não publicar com contas seed.

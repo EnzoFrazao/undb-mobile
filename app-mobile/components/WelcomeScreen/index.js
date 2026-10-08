@@ -1,10 +1,11 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import Header from '../Header';
+import ActionButton from '../ActionButton';
 import { getWelcomeMessage } from '../../services/welcome';
 import styles from './styles';
 
-export default function WelcomeScreen({ user, onLogout }) {
+export default function WelcomeScreen({ user, onLogout, onContinue }) {
   const welcomeMessage = getWelcomeMessage(user.role);
 
   return (
@@ -22,6 +23,7 @@ export default function WelcomeScreen({ user, onLogout }) {
           <Text style={styles.profileCaption}>Perfil de acesso</Text>
           <Text style={styles.profileName}>{user.roleLabel}</Text>
           <Text style={styles.welcomeMessage}>{welcomeMessage}</Text>
+          <ActionButton label="Continuar" onPress={onContinue} />
 
           <Pressable
             onPress={onLogout}

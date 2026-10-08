@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -12,14 +12,12 @@ import {
 
 import Header from '../Header';
 import {
-  authenticateUser,
   validateLoginFields,
 } from '../../services/auth';
 import { colors } from '../../theme/tokens';
 import styles from './styles';
 
 export default function LoginScreen({
-  users,
   notice = '',
   onAuthenticated,
   onRegisterPress,
@@ -33,16 +31,6 @@ export default function LoginScreen({
   const [formNotice, setFormNotice] = useState(notice);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const passwordInputRef = useRef(null);
-  const submitTimerRef = useRef(null);
-
-  useEffect(
-    () => () => {
-      if (submitTimerRef.current) {
-        clearTimeout(submitTimerRef.current);
-      }
-    },
-    [],
-  );
 
   function updateEmail(value) {
     setEmail(value);
@@ -67,7 +55,7 @@ export default function LoginScreen({
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (isSubmitting) {
       return;
     }
@@ -84,19 +72,9 @@ export default function LoginScreen({
     }
 
     setIsSubmitting(true);
-    submitTimerRef.current = setTimeout(() => {
-      const user = authenticateUser(email, password, users);
-      setIsSubmitting(false);
-
-      if (!user) {
-        setFormError(
-          'E-mail ou senha não conferem. Verifique os dados e tente novamente.',
-        );
-        return;
-      }
-
-      onAuthenticated(user);
-    }, 500);
+    try { await onAuthenticated(email, password); }
+    catch (error) { setFormError(error.message); }
+    finally { setIsSubmitting(false); }
   }
 
   return (

@@ -1,55 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AppFrame from './components/AppFrame';
 import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
-import WelcomeScreen from './components/WelcomeScreen';
-import { mockUsers } from './data/mockUsers';
+import Workspace from './components/Workspace';
+import { request, setToken, setUnauthorizedHandler } from './services/api';
 
 export default function App() {
-  const [users, setUsers] = useState(() => [...mockUsers]);
-  const [authenticatedUser, setAuthenticatedUser] = useState(null);
-  const [currentScreen, setCurrentScreen] = useState('login');
-  const [loginFeedback, setLoginFeedback] = useState('');
-
-  function handleAuthenticated(user) {
-    setLoginFeedback('');
-    setAuthenticatedUser(user);
+  const [user, setUser] = useState(null);
+  const [screen, setScreen] = useState('login');
+  const [notice, setNotice] = useState('');
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      setToken(''); setUser(null); setScreen('login'); setNotice('Sua sessão expirou. Faça login novamente.');
+    });
+    return () => setUnauthorizedHandler(undefined);
+  }, []);
+  async function login(email, password) {
+    const session = await request('/login', 'POST', { email, password });
+    setToken(session.token); setUser(session.user); setNotice('');
   }
-
-  function handleRegistered(user) {
-    setUsers((currentUsers) => [...currentUsers, user]);
-    setLoginFeedback('Cadastro realizado. Entre com seu e-mail e senha.');
-    setCurrentScreen('login');
+  async function register(fields) {
+    await request('/register', 'POST', fields);
+    setNotice('Cadastro realizado. Entre com seu e-mail e senha.'); setScreen('login');
   }
-
-  function handleLogout() {
-    setAuthenticatedUser(null);
-    setCurrentScreen('login');
+  async function logout() {
+    await request('/logout', 'POST');
+    setToken(''); setUser(null); setScreen('login');
   }
-
-  return (
-    <>
-      {authenticatedUser ? (
-        <WelcomeScreen user={authenticatedUser} onLogout={handleLogout} />
-      ) : currentScreen === 'register' ? (
-        <RegisterScreen
-          users={users}
-          onRegistered={handleRegistered}
-          onLoginPress={() => setCurrentScreen('login')}
-        />
-      ) : (
-        <LoginScreen
-          users={users}
-          notice={loginFeedback}
-          onAuthenticated={handleAuthenticated}
-          onRegisterPress={() => {
-            setLoginFeedback('');
-            setCurrentScreen('register');
-          }}
-        />
-      )}
-      <StatusBar style="light" />
-    </>
-  );
+  return <SafeAreaProvider><AppFrame>
+    {user ? <Workspace user={user} onLogout={logout} /> : screen === 'register' ?
+      <RegisterScreen onRegistered={register} onLoginPress={() => setScreen('login')} /> :
+      <LoginScreen notice={notice} onAuthenticated={login} onRegisterPress={() => { setNotice(''); setScreen('register'); }} />}
+    <StatusBar style="dark" />
+  </AppFrame></SafeAreaProvider>;
 }
