@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const sharp = require('sharp');
 const { createApp } = require('../server');
 
 test('fluxo completo: sessão, vínculos, foto, edição, assinatura, versões e persistência', async (t) => {
@@ -51,7 +52,7 @@ test('fluxo completo: sessão, vínculos, foto, edição, assinatura, versões e
   assert.equal((await api('/state', fresh)).data.works.length, 0);
   await api('/works/obra-jardins', owner, 'PATCH', { clientIds: ['client', registered.data.user.id] });
   assert.equal((await api('/state', fresh)).data.works.length, 1);
-  const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=';
+  const png = (await sharp({ create: { width: 64, height: 48, channels: 3, background: '#2563EB' } }).png().toBuffer()).toString('base64');
   const upload = await api('/photos', operator, 'POST', { workId: 'obra-jardins', consent: true, base64: png });
   assert.equal(upload.status, 201);
   assert.equal((await api(`/photos/${upload.data.photo.id}`, client)).status, 200);
@@ -65,8 +66,24 @@ test('fluxo completo: sessão, vínculos, foto, edição, assinatura, versões e
   const created = await api('/reports', operator, 'POST', fields);
   assert.equal(created.status, 201);
   const id = created.data.report.id;
+  const pdfRoute = `/reports/${id}/pdf`;
+  const download = (token, query = '') => fetch(base + pdfRoute + query, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  assert.equal((await download()).status, 401);
+  assert.equal((await download(operatorTwo)).status, 404);
+  const otherClient = await login('outro.cliente@diariodeobra.com.br');
+  assert.equal((await download(otherClient)).status, 404);
+  const pendingPdf = await download(operator, '?version=1');
+  assert.equal(pendingPdf.status, 200);
+  assert.equal(pendingPdf.headers.get('content-type'), 'application/pdf');
+  assert.equal(pendingPdf.headers.get('cache-control'), 'no-store');
+  assert.match(pendingPdf.headers.get('content-disposition'), /^attachment; filename="RDO-2026-01-01-/);
+  const pendingBytes = Buffer.from(await pendingPdf.arrayBuffer());
+  assert.equal(pendingBytes.subarray(0, 5).toString(), '%PDF-');
+  assert.match(pendingBytes.toString('latin1'), /\/Subtype \/Image/);
   assert.equal((await api('/reports', operator, 'POST', fields)).status, 409);
-  assert.equal((await api(`/reports/${id}`, operator, 'PATCH', { ...fields, version: 1 })).status, 403);
+  assert.equal((await api(`/reports/${id}`, operatorTwo, 'PATCH', { ...fields, version: 1 })).status, 404);
   assert.equal((await api(`/reports/${id}`, owner, 'PATCH', { ...fields, version: 0 })).status, 409);
   const edited = await api(`/reports/${id}`, owner, 'PATCH', { ...fields, activities: 'Atividade revisada pelo dono.', version: 1 });
   assert.equal(edited.status, 200); assert.equal(edited.data.report.versions.length, 2);
@@ -76,6 +93,13 @@ test('fluxo completo: sessão, vínculos, foto, edição, assinatura, versões e
   const signed = await api(`/reports/${id}/sign`, owner, 'POST', { confirm: true, version: 2 });
   assert.equal(signed.status, 200); assert.equal(signed.data.report.signature.authorId, 'owner');
   assert.equal(signed.data.report.versions.length, 3);
+  assert.equal((await download(owner, '?version=2')).status, 409);
+  const signedPdf = await download(client, '?version=3');
+  assert.equal(signedPdf.status, 200);
+  const signedBytes = Buffer.from(await signedPdf.arrayBuffer());
+  assert.notDeepEqual(signedBytes, pendingBytes);
+  assert.match(signedBytes.toString('latin1'), /\/Subtype \/Image/);
+  if (process.env.RDO_TEST_PDF_PATH) fs.writeFileSync(process.env.RDO_TEST_PDF_PATH, signedBytes);
   assert.equal((await api(`/reports/${id}`, owner, 'PATCH', { ...fields, version: 3 })).status, 409);
   assert.equal((await api(`/reports/${id}/sign`, owner, 'POST', { confirm: true, version: 3 })).status, 409);
   const clientRead = await api(`/reports/${id}`, fresh);

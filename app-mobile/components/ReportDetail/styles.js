@@ -20,4 +20,5 @@ export default StyleSheet.create({
   versionNotice: { padding: 14, backgroundColor: colors.focusWash, borderRadius: 10, marginTop: 16, gap: 10 },
   actions: { marginTop: 20, gap: 12 },
   error: { color: colors.error, backgroundColor: colors.errorWash, padding: 14, borderRadius: 8, marginTop: 12, lineHeight: 22 },
+  success: { color: colors.success, backgroundColor: colors.successWash, padding: 12, borderRadius: 8, marginBottom: 12, fontSize: 15, lineHeight: 22 },
 });

@@ -11,6 +11,7 @@ export default StyleSheet.create({
     backgroundColor: colors.brand,
     justifyContent: 'flex-end',
   },
+  compact: { minHeight: 184, paddingTop: 30, paddingBottom: 26 },
   brandMark: {
     position: 'absolute',
     top: 28,

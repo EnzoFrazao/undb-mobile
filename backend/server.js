@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { createStore, hashPassword, verifyPassword, publicUser, recordVersion, snapshot } = require('./store');
+const { createReportPdf } = require('./report-pdf');
 
 const digest = (value) => crypto.createHash('sha256').update(value).digest('hex');
 class ApiError extends Error {
@@ -12,6 +13,35 @@ class ApiError extends Error {
 const check = (condition, status, message, fields) => { if (!condition) throw new ApiError(status, message, fields); };
 const text = (value, max = 5000) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 const canAccess = (user, work) => user.role === 'owner' || (user.role === 'client' ? work.clientIds : work.operatorIds).includes(user.id);
+
+function visibleReport(report, user, summary = false) {
+  const { correction, versions, ...fields } = report;
+  const showReason = user.role === 'owner' || (user.role === 'operator' && report.authorId === user.id);
+  return {
+    ...fields,
+    ...(showReason && correction ? { correction } : {}),
+    versions: versions.map(({ content, ...version }) => {
+      if (summary) return version;
+      if (showReason) return { ...version, content };
+      const { correction: _private, ...publicContent } = content;
+      return { ...version, content: publicContent };
+    }),
+  };
+}
+
+function notify(data, report, recipients, type, actorId) {
+  const inbox = data.notices ??= [];
+  const at = new Date().toISOString();
+  for (const recipient of new Set(recipients)) {
+    if (recipient !== actorId) inbox.push({
+      id: crypto.randomUUID(), recipient, type, reportId: report.id, workId: report.workId, date: report.date, at, readAt: null,
+    });
+  }
+}
+
+function notifyReview(data, report, work, actor, type) {
+  notify(data, report, [...work.clientIds, ...data.users.filter((u) => u.role === 'owner').map((u) => u.id)], type, actor.id);
+}
 function validDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value ?? '')) return false;
   const date = new Date(`${value}T12:00:00Z`);
@@ -121,8 +151,21 @@ function createApp({ directory = process.env.DATA_DIR || path.join(__dirname, 's
       if (route === '/api/state' && method === 'GET') {
         const data = store.read();
         const works = data.works.filter((w) => canAccess(user, w));
-        const reports = data.reports.filter((r) => works.some((w) => w.id === r.workId)).map((r) => ({ ...r, versions: r.versions.map(({ content, ...v }) => v) }));
-        return send(200, { user: publicUser(user), works, reports, users: user.role === 'owner' ? data.users.map(publicUser) : [], serverTime: new Date().toISOString() });
+        const workIds = new Set(works.map((w) => w.id));
+        const reports = data.reports.filter((r) => workIds.has(r.workId)).map((r) => visibleReport(r, user, true));
+        const notices = (data.notices || []).filter((item) => item.recipient === user.id && workIds.has(item.workId))
+          .slice(-60).reverse().map(({ recipient, ...item }) => item);
+        return send(200, { user: publicUser(user), works, reports, notices, users: user.role === 'owner' ? data.users.map(publicUser) : [], serverTime: new Date().toISOString() });
+      }
+      const noticeMatch = route.match(/^\/api\/notices\/([^/]+)\/read$/);
+      if (noticeMatch && method === 'POST') {
+        store.transaction((data) => {
+          const item = (data.notices || []).find((notice) => notice.id === noticeMatch[1] && notice.recipient === user.id);
+          check(item, 404, 'Aviso não encontrado.');
+          workFor(item.workId, data);
+          item.readAt ??= new Date().toISOString();
+        });
+        return send(200, { ok: true });
       }
       if (route === '/api/operators' && method === 'POST') {
         check(user.role === 'owner', 403, 'Somente o dono pode criar responsáveis.');
@@ -195,27 +238,91 @@ function createApp({ directory = process.env.DATA_DIR || path.join(__dirname, 's
         const body = await readBody(req);
         let report;
         store.transaction((data) => {
-          workFor(body.workId, data);
+          const work = workFor(body.workId, data);
           const fields = reportFields(body, data, body.workId);
           check(!data.reports.some((r) => r.workId === body.workId && r.date === fields.date), 409, 'Esta obra já possui um relatório nessa data.');
           report = { id: crypto.randomUUID(), workId: body.workId, ...fields, authorId: user.id, authorName: user.name, createdAt: new Date().toISOString(), status: 'pending', signature: null, versions: [] };
           recordVersion(report, user, 'Enviado'); data.reports.push(report);
+          notifyReview(data, report, work, user, 'submitted');
         });
         return send(201, { report });
       }
+      const pdfMatch = route.match(/^\/api\/reports\/([^/]+)\/pdf$/);
+      if (pdfMatch && method === 'GET') {
+        const data = store.read();
+        const report = reportFor(pdfMatch[1], data);
+        const work = workFor(report.workId, data);
+        const version = url.searchParams.get('version');
+        check(version === null || version === String(report.versions.length), 409, 'O RDO mudou. Abra a versão atual antes de exportar.');
+        const pdf = await createReportPdf({ work, report, photos: data.uploads, directory });
+        res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdf.length,
+          'Content-Disposition': `attachment; filename="RDO-${report.date}-${report.id.slice(0, 8)}.pdf"`,
+        });
+        return res.end(pdf);
+      }
       const reportMatch = route.match(/^\/api\/reports\/([^/]+)$/);
-      if (reportMatch && method === 'GET') return send(200, { report: reportFor(reportMatch[1]) });
+      if (reportMatch && method === 'GET') return send(200, { report: visibleReport(reportFor(reportMatch[1]), user) });
       if (reportMatch && method === 'PATCH') {
-        check(user.role === 'owner', 403, 'Somente o dono pode editar relatórios enviados.');
+        check(user.role === 'owner' || user.role === 'operator', 403, 'Seu perfil não pode editar relatórios.');
         const body = await readBody(req);
         let report;
         store.transaction((data) => {
           report = reportFor(reportMatch[1], data);
+          const isOperator = user.role === 'operator';
+          if (isOperator) check(report.authorId === user.id, 403, 'Você só pode editar RDOs que você enviou.');
           check(!report.signature, 409, 'Relatório assinado: edição bloqueada.');
           check(body.version === report.versions.length, 409, 'Este relatório mudou. Atualize a tela antes de editar.');
+          if (isOperator) check(report.status === 'pending', 409, 'Use a opção de corrigir e reenviar um RDO devolvido.');
           const fields = reportFields(body, data, report.workId);
           check(!data.reports.some((r) => r.id !== report.id && r.workId === report.workId && r.date === fields.date), 409, 'Já existe relatório nesta data.');
-          Object.assign(report, fields); recordVersion(report, user, 'Editado');
+          const resolving = report.status === 'returned';
+          if (resolving || isOperator) check(fields.date === report.date, 400, 'A data original do RDO deve ser preservada.');
+          Object.assign(report, fields);
+          if (resolving) {
+            report.status = 'pending';
+            delete report.correction;
+            recordVersion(report, user, 'Correção resolvida pelo dono');
+            notifyReview(data, report, workFor(report.workId, data), user, 'resubmitted');
+          } else {
+            recordVersion(report, user, 'Editado');
+            if (isOperator) notifyReview(data, report, workFor(report.workId, data), user, 'updated');
+          }
+        });
+        return send(200, { report });
+      }
+      const correctionMatch = route.match(/^\/api\/reports\/([^/]+)\/(return|resubmit)$/);
+      if (correctionMatch && method === 'POST') {
+        const returning = correctionMatch[2] === 'return';
+        check(user.role === (returning ? 'owner' : 'operator'), 403, 'Seu perfil não pode realizar esta ação.');
+        const body = await readBody(req);
+        let report;
+        store.transaction((data) => {
+          report = reportFor(correctionMatch[1], data);
+          const work = workFor(report.workId, data);
+          if (!returning) check(report.authorId === user.id, 403, 'Somente o responsável que enviou o RDO pode reenviar.');
+          check(!report.signature, 409, 'Relatório assinado: alteração bloqueada.');
+          check(body.version === report.versions.length, 409, 'O RDO mudou. Reabra a versão atual antes de continuar.');
+          if (returning) {
+            check(report.status === 'pending', 409, 'Apenas RDOs pendentes podem ser devolvidos.');
+            check(work.operatorIds.includes(report.authorId) && data.users.some((u) => u.id === report.authorId && u.role === 'operator'),
+              409, 'O autor não é um responsável vinculado a esta obra.');
+            const reason = typeof body.reason === 'string' ? body.reason.trim() : '';
+            check(reason.length >= 5 && reason.length <= 1000, 400, 'Informe um motivo de 5 a 1000 caracteres.');
+            report.status = 'returned';
+            report.correction = { reason, requestedBy: user.name, requestedAt: new Date().toISOString() };
+            recordVersion(report, user, 'Correção solicitada');
+            notify(data, report, [report.authorId], 'returned', user.id);
+          } else {
+            check(report.status === 'returned', 409, 'Este RDO não está aguardando correção.');
+            const fields = reportFields({ ...body, date: report.date }, data, report.workId);
+            check(body.date === undefined || body.date === report.date, 400, 'A data de um RDO devolvido não pode ser alterada.');
+            Object.assign(report, fields, { status: 'pending' });
+            delete report.correction;
+            recordVersion(report, user, 'Reenviado');
+            notifyReview(data, report, work, user, 'resubmitted');
+          }
         });
         return send(200, { report });
       }
@@ -228,11 +335,13 @@ function createApp({ directory = process.env.DATA_DIR || path.join(__dirname, 's
         store.transaction((data) => {
           report = reportFor(signMatch[1], data);
           check(!report.signature, 409, 'Relatório já assinado.');
+          check(report.status !== 'returned', 409, 'O RDO precisa voltar à revisão antes de ser assinado.');
           check(body.version === report.versions.length, 409, 'O relatório mudou. Revise a versão atual antes de assinar.');
           const content = snapshot(report);
           const photoHashes = report.photos.map((id) => data.uploads.find((p) => p.id === id).hash);
           report.signature = { authorId: user.id, authorName: user.name, at: new Date().toISOString(), version: report.versions.length, contentHash: digest(JSON.stringify({ content, photoHashes })), type: 'Confirmação eletrônica acadêmica' };
           report.status = 'signed'; recordVersion(report, user, 'Assinado');
+          notify(data, report, workFor(report.workId, data).clientIds, 'signed', user.id);
         });
         return send(200, { report });
       }

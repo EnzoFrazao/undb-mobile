@@ -6,9 +6,10 @@ export default function Header({
   title = 'Diário de Obra',
   heading = 'Acesse sua conta',
   description = 'Entre com seu e-mail e senha para continuar.',
+  compact = false,
 }) {
   return (
-    <View style={styles.container} accessibilityRole="header">
+    <View style={[styles.container, compact && styles.compact]} accessibilityRole="header">
       <View
         style={styles.brandMark}
         importantForAccessibility="no-hide-descendants"

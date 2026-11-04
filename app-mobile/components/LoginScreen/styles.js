@@ -40,7 +40,7 @@ export default StyleSheet.create({
     minHeight: 56,
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.border,
     borderRadius: radii.md,
     backgroundColor: colors.surface,
@@ -168,7 +168,7 @@ export default StyleSheet.create({
     fontWeight: '700',
   },
   footer: {
-    marginTop: spacing.xxl,
+    marginTop: spacing.xl,
     color: colors.muted,
     fontSize: 14,
     lineHeight: 20,

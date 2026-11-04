@@ -3,6 +3,8 @@ import { colors } from '../../theme/tokens';
 export default StyleSheet.create({
   title: { color: colors.ink, fontSize: 26, lineHeight: 32, fontWeight: '800', marginBottom: 6 },
   subtitle: { color: colors.muted, fontSize: 15, lineHeight: 22, marginBottom: 20 },
+  draftNote: { color: colors.ink, backgroundColor: colors.focusWash, borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 14, lineHeight: 20 },
+  draftWarning: { gap: 8, marginBottom: 16 },
   section: { color: colors.ink, fontSize: 19, fontWeight: '700', marginBottom: 8 },
   actions: { flexDirection: 'row', gap: 10, marginBottom: 14 },
   footer: { gap: 12, marginTop: 24 },

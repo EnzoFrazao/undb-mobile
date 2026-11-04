@@ -31,6 +31,8 @@ export default function LoginScreen({
   const [formNotice, setFormNotice] = useState(notice);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const passwordInputRef = useRef(null);
+  const emailInputRef = useRef(null);
+  const submittingRef = useRef(false);
 
   function updateEmail(value) {
     setEmail(value);
@@ -56,11 +58,10 @@ export default function LoginScreen({
   }
 
   async function handleSubmit() {
-    if (isSubmitting) {
+    if (submittingRef.current) {
       return;
     }
 
-    Keyboard.dismiss();
     setFormError('');
     setFormNotice('');
 
@@ -68,13 +69,17 @@ export default function LoginScreen({
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
+      if (nextErrors.email) emailInputRef.current?.focus();
+      else passwordInputRef.current?.focus();
       return;
     }
 
+    Keyboard.dismiss();
+    submittingRef.current = true;
     setIsSubmitting(true);
     try { await onAuthenticated(email, password); }
     catch (error) { setFormError(error.message); }
-    finally { setIsSubmitting(false); }
+    finally { submittingRef.current = false; setIsSubmitting(false); }
   }
 
   return (
@@ -87,7 +92,7 @@ export default function LoginScreen({
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <Header />
+        <Header compact description="Registre e acompanhe suas obras." />
 
         <View style={styles.formSurface}>
           <View style={styles.form}>
@@ -111,12 +116,13 @@ export default function LoginScreen({
                 ]}
               >
                 <TextInput
+                  ref={emailInputRef}
                   value={email}
                   onChangeText={updateEmail}
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
                   onSubmitEditing={() => passwordInputRef.current?.focus()}
-                  placeholder="seuemail@empresa.com.br"
+                  placeholder="nome@exemplo.com"
                   placeholderTextColor={colors.placeholder}
                   style={styles.input}
                   autoCapitalize="none"
@@ -125,6 +131,8 @@ export default function LoginScreen({
                   inputMode="email"
                   keyboardType="email-address"
                   returnKeyType="next"
+                  submitBehavior="submit"
+                  maxLength={254}
                   editable={!isSubmitting}
                   accessibilityLabel="E-mail"
                   accessibilityHint="Digite o e-mail usado para entrar"
@@ -164,12 +172,14 @@ export default function LoginScreen({
                   autoCorrect={false}
                   secureTextEntry={!passwordVisible}
                   returnKeyType="done"
+                  maxLength={128}
                   editable={!isSubmitting}
                   accessibilityLabel="Senha"
                   accessibilityHint="Digite sua senha de acesso"
                 />
                 <Pressable
                   onPress={() => setPasswordVisible((current) => !current)}
+                  disabled={isSubmitting}
                   style={({ pressed }) => [
                     styles.passwordToggle,
                     pressed && styles.passwordTogglePressed,
@@ -178,7 +188,7 @@ export default function LoginScreen({
                   accessibilityLabel={
                     passwordVisible ? 'Ocultar senha' : 'Mostrar senha'
                   }
-                  accessibilityState={{ expanded: passwordVisible }}
+                  accessibilityState={{ disabled: isSubmitting }}
                   hitSlop={4}
                 >
                   <Text style={styles.passwordToggleText}>
@@ -225,7 +235,7 @@ export default function LoginScreen({
             </Pressable>
 
             <View style={styles.switchRow}>
-              <Text style={styles.switchPrompt}>Ainda não possui uma conta?</Text>
+              <Text style={styles.switchPrompt}>Primeiro acesso como cliente?</Text>
               <Pressable
                 onPress={onRegisterPress}
                 disabled={isSubmitting}
@@ -234,15 +244,15 @@ export default function LoginScreen({
                   pressed && styles.switchLinkPressed,
                 ]}
                 accessibilityRole="button"
-                accessibilityLabel="Cadastre-se"
+                accessibilityLabel="Criar conta de cliente"
                 accessibilityState={{ disabled: isSubmitting }}
               >
-                <Text style={styles.switchLinkText}>Cadastre-se</Text>
+                <Text style={styles.switchLinkText}>Criar conta</Text>
               </Pressable>
             </View>
           </View>
 
-          <Text style={styles.footer}>Diário de Obra Mobile</Text>
+          <Text style={styles.footer}>Dono e responsável entram com a conta fornecida pela empresa.</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

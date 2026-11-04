@@ -1,5 +1,25 @@
 # Marcos do projeto
 
+## 2026-11-04 — Edição pelo autor antes da assinatura
+
+- Responsável vinculado ajusta o próprio RDO pendente diretamente, com data fixa, histórico e aviso de edição.
+
+## 2026-11-04 — Correções e avisos internos
+
+- Devolução com motivo privado, reenvio do mesmo RDO e histórico versionado.
+- Aba Avisos com leitura persistente e isolamento por destinatário e obra.
+
+## 2026-11-04 — Rascunhos e fila de revisão
+
+- Rascunho local dos campos de novo RDO, separado por servidor, conta e obra, com retomada pela aba RDO.
+- Fila de revisão do Dono com filtros e retorno do detalhe sem perda da seleção.
+
+## 2026-11-04 — Fluxo de RDO e exportação
+
+- Atalho e aba RDO exclusivos do Responsável, com consulta do registro de hoje e confirmação de envio.
+- Login mais compacto e foco no primeiro campo inválido, mantendo a identificação de perfil pela conta.
+- Exportação PDF autenticada para download web e compartilhamento nativo; persistência continua em JSON.
+
 ## 2026-10-07 — aplicação com API e JSON
 
 - Escopo ampliado pelo usuário para sistema do PDF; backend JSON escolhido explicitamente.

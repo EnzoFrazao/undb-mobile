@@ -2,6 +2,8 @@
 
 **Status:** aceito · **Data:** 2026-10-07 · substitui ADR 001.
 
+A persistência continua conforme esta decisão. A ADR 003 adiciona bibliotecas de exportação PDF.
+
 O usuário ampliou o escopo para o sistema do PDF e escolheu backend com JSON, sem banco.
 A API usa somente módulos nativos do Node 22; `backend/storage/data.json` persiste usuários,
 contratos, vínculos, sessões e versões. Fotos ficam em arquivos privados na subpasta `photos`.

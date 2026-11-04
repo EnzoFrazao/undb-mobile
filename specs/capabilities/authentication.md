@@ -14,6 +14,10 @@ e credencial inválida. API usa scrypt/salt, sessão aleatória256bits com expir
 Senha/hash nunca retornam. Logout revoga;401 retorna ao login. Recarregar exige login, sem apagar dados.
 WelcomeScreen mantém mensagem por perfil e botão Continuar para workspace/guia.
 
+Login compacto prioriza o formulário em telas pequenas. Depois de uma tentativa inválida, o foco
+vai para o primeiro campo com erro. O cadastro de Cliente tem ação própria; perfis da equipe
+continuam usando contas da empresa. Envios simultâneos do formulário são bloqueados.
+
 Permissões e vínculos aplicados no servidor, não apenas escondidos no frontend. CORS explícito e limite
 de tentativas de login. Backend depende de execução separada. Demonstração local HTTP; HTTPS e proteção
 operacional necessários antes de uso real. Evidências: testes app/API, bundles e browser; testing.md.
