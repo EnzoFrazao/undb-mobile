@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../../theme/tokens';
+import { colors, radii, spacing, typography } from '../../theme/tokens';
 
 export default StyleSheet.create({
   screen: {
@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   contentSurface: {
     flexGrow: 1,
-    marginTop: -16,
+    marginTop: -spacing.lg,
     paddingTop: spacing.xxl,
     paddingHorizontal: spacing.xl,
     paddingBottom: spacing.xl,
@@ -25,21 +25,21 @@ export default StyleSheet.create({
   profileCaption: {
     marginBottom: spacing.xs,
     color: colors.muted,
-    fontSize: 16,
+    fontSize: typography.body,
     lineHeight: 22,
     fontWeight: '600',
   },
   profileName: {
     marginBottom: spacing.lg,
     color: colors.ink,
-    fontSize: 24,
+    fontSize: typography.title,
     lineHeight: 30,
     fontWeight: '800',
   },
   welcomeMessage: {
     marginBottom: spacing.xxl,
     color: colors.ink,
-    fontSize: 17,
+    fontSize: typography.body,
     lineHeight: 26,
   },
   logoutButton: {
@@ -57,14 +57,14 @@ export default StyleSheet.create({
   },
   logoutButtonText: {
     color: colors.actionPressed,
-    fontSize: 16,
+    fontSize: typography.body,
     lineHeight: 22,
     fontWeight: '700',
   },
   footer: {
     marginTop: spacing.xxl,
     color: colors.muted,
-    fontSize: 14,
+    fontSize: typography.caption,
     lineHeight: 20,
     textAlign: 'center',
   },

@@ -19,10 +19,12 @@ import styles from './styles';
 
 export default function LoginScreen({
   notice = '',
+  initialEmail = '',
+  onEmailChange,
   onAuthenticated,
   onRegisterPress,
 }) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
@@ -36,6 +38,7 @@ export default function LoginScreen({
 
   function updateEmail(value) {
     setEmail(value);
+    onEmailChange?.(value);
     setFormError('');
     setFormNotice('');
 
@@ -117,6 +120,7 @@ export default function LoginScreen({
               >
                 <TextInput
                   ref={emailInputRef}
+                  testID="login-email"
                   value={email}
                   onChangeText={updateEmail}
                   onFocus={() => setFocusedField('email')}
@@ -159,6 +163,7 @@ export default function LoginScreen({
               >
                 <TextInput
                   ref={passwordInputRef}
+                  testID="login-password"
                   value={password}
                   onChangeText={updatePassword}
                   onFocus={() => setFocusedField('password')}
@@ -217,6 +222,7 @@ export default function LoginScreen({
             ) : null}
 
             <Pressable
+              testID="login-submit"
               onPress={handleSubmit}
               disabled={isSubmitting}
               style={({ pressed }) => [

@@ -1,17 +1,12 @@
-# Handoff local — 2026-10-07
+# Handoff local — 2026-11-06
 
-Fonte de verdade: specs/README.md, capabilities, system.md e testing.md.
+A implementação da melhoria de UX está no working tree. Consulte specs/README.md,
+specs/capabilities/navigation.md e specs/testing.md para contrato e evidências.
 
-Produto acadêmico agora integrado à API Node com JSON por autorização do usuário. UI mobile
-inclui login/cadastro, welcome, onboarding, obras/vínculos, diário/fotos, calendário, revisão/assinatura
-e consulta restrita de Cliente. ADR002 substitui estado useState para dados persistentes.
+Foram aprovados 22 testes do app, duas integrações da API e a exportação Web/Android/iOS.
+A regressão no Chrome usou backend com DATA_DIR temporário e três perfis fictícios. O diretório
+de dados normal fica em backend/storage. Para iniciar o app localmente, siga o README.
 
-Backend e Metro foram iniciados para visualizar no PC em localhost3001 e localhost8081.
-Reiniciar conforme README usando dois terminais. Fotos e JSON privados ignorados no Git;
-`.idea/` é arquivo preexistente do usuário e foi preservado. Publicação na branch main solicitada
-pelo usuário; consulte o histórico Git para o commit e a confirmação de sincronização remota.
-
-Verificados testes unitários/API, bundles web/Android/iOS e Doctor21/21. Inspeção browser390x844/320x740.
-Pendências externas:5integrantes(P-002), aparelho real/Expo Go/câmera, HTTPS publicado,
-garantias jurídicas/imutabilidade forte e medidas de desempenho/carga.22 avisos de dependências
-Expo/Metro restantes; não fazer downgrade com audit fix --force. Não publicar com contas seed.
+Pendências da mudança: validação em aparelho físico, confirmação da professora sobre o tema
+escuro e política de retenção de fotos sem RDO. As decisões técnicas sobre navegação, sessão e
+rascunhos estão nos ADRs 007 a 009. A pasta .idea/ já existia no workspace.

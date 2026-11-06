@@ -1,7 +1,13 @@
-import { View } from 'react-native';
+import { Platform, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 
-export default function AppFrame({ children }) {
-  return <View style={styles.canvas}><SafeAreaView style={styles.device} edges={['top', 'bottom']}>{children}</SafeAreaView></View>;
+export default function AppFrame({ children, auth }) {
+  const { width } = useWindowDimensions();
+  const wide = !auth && Platform.OS === 'web' && width >= 900;
+  return <View style={styles.canvas}>
+    <SafeAreaView style={[styles.device, wide && styles.wide, auth && styles.brandTop]} edges={['top', 'left', 'right']}>
+      <SafeAreaView style={styles.body} edges={['bottom']}>{children}</SafeAreaView>
+    </SafeAreaView>
+  </View>;
 }

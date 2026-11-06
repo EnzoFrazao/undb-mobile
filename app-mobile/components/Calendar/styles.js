@@ -1,19 +1,18 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/tokens';
+import { colors, radii, spacing, typography, sizes } from '../../theme/tokens';
 export default StyleSheet.create({
-  calendar: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 10, marginBottom: 20 },
+  calendar: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radii.md, padding: spacing.sm, marginBottom: spacing.xl },
   heading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  arrow: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
-  arrowText: { color: colors.actionPressed, fontSize: 30 },
-  month: { color: colors.ink, fontWeight: '700', fontSize: 16, textTransform: 'capitalize' },
+  arrow: { minWidth: sizes.touchMin, minHeight: sizes.touchMin, justifyContent: 'center', alignItems: 'center' },
+  month: { color: colors.ink, fontWeight: '700', fontSize: typography.body },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
-  weekday: { width: '14.2857%', paddingVertical: 8, textAlign: 'center', color: colors.muted, fontWeight: '700', fontSize: 14 },
-  cell: { width: '14.2857%', minHeight: 44, justifyContent: 'center', alignItems: 'center', borderRadius: 8 },
+  weekday: { width: '14.2857%', paddingVertical: spacing.sm, textAlign: 'center', color: colors.muted, fontWeight: '700', fontSize: typography.caption },
+  cell: { width: '14.2857%', minHeight: sizes.touchMin, justifyContent: 'center', alignItems: 'center', borderRadius: radii.sm },
   selected: { backgroundColor: colors.action },
-  day: { color: colors.ink, fontSize: 15 },
+  day: { color: colors.ink, fontSize: typography.body },
   selectedText: { color: colors.white, fontWeight: '700' },
-  dot: { width: 4, height: 4, marginTop: 3, borderRadius: 2, backgroundColor: 'transparent' },
+  dot: { width: 4, height: 4, marginTop: spacing.xs, borderRadius: 2, backgroundColor: 'transparent' },
   dotActive: { backgroundColor: colors.action },
   dotSelected: { backgroundColor: colors.white },
-  legend: { color: colors.muted, fontSize: 13, marginTop: 8, textAlign: 'center' },
+  legend: { color: colors.muted, fontSize: typography.caption, marginTop: spacing.sm, textAlign: 'center' },
 });

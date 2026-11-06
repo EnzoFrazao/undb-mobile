@@ -28,6 +28,7 @@ Este diretório contém o contrato necessário para compreender e modificar o so
 | Tema | Ler |
 |---|---|
 | Estrutura do app e componentes | `capabilities/core.md` |
+| Pilhas, retorno e confirmação de saída | `capabilities/navigation.md` |
 | Login e sessões na API | `capabilities/authentication.md` |
 | Cadastro persistente de clientes | `capabilities/registration.md` |
 | Obras, relatórios, fotos, consulta e assinatura | `capabilities/works-reports.md` |

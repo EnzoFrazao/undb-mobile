@@ -1,17 +1,17 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../../theme/tokens';
+import { colors, radii, spacing, typography } from '../../theme/tokens';
 
 export default StyleSheet.create({
   container: {
     minHeight: 220,
-    paddingTop: 28,
-    paddingBottom: 32,
+    paddingTop: spacing.xxl,
+    paddingBottom: spacing.xxl,
     paddingHorizontal: spacing.xl,
     backgroundColor: colors.brand,
     justifyContent: 'flex-end',
   },
-  compact: { minHeight: 184, paddingTop: 30, paddingBottom: 26 },
+  compact: { minHeight: 184, paddingTop: spacing.xxl, paddingBottom: spacing.xl },
   brandMark: {
     position: 'absolute',
     top: 28,
@@ -40,7 +40,7 @@ export default StyleSheet.create({
   brand: {
     maxWidth: '78%',
     color: colors.white,
-    fontSize: 28,
+    fontSize: typography.display,
     lineHeight: 34,
     fontWeight: '800',
     letterSpacing: -0.6,
@@ -48,7 +48,7 @@ export default StyleSheet.create({
   heading: {
     marginTop: spacing.lg,
     color: colors.white,
-    fontSize: 24,
+    fontSize: typography.title,
     lineHeight: 29,
     fontWeight: '700',
   },
@@ -56,7 +56,7 @@ export default StyleSheet.create({
     marginTop: spacing.sm,
     maxWidth: 360,
     color: colors.textOnBrand,
-    fontSize: 16,
+    fontSize: typography.body,
     lineHeight: 24,
     fontWeight: '500',
   },

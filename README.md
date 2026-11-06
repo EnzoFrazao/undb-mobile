@@ -103,8 +103,8 @@ consulta. O dono cria responsáveis em Cadastrar obra ou Gerenciar pessoas da ob
 
 `backend/storage/data.json` guarda usuários, contratos, relatórios, versões e sessões;
 `backend/storage/photos/` guarda imagens. A pasta é ignorada pelo Git: cada computador começa com
-seus próprios dados. Reiniciar não apaga cadastros/relatórios. Recarregar o navegador encerra a sessão
-local e exige novo login, mas os dados continuam no servidor. Faça backup da pasta inteira com a API
+seus próprios dados. Reiniciar preserva cadastros e relatórios. Recarregar o navegador retoma a sessão
+válida na raiz da aba atual. O servidor expira sessões após oito horas. Faça backup da pasta inteira com a API
 parada; não edite o JSON com a API aberta e não rode duas APIs no mesmo diretório.
 
 ## Organização

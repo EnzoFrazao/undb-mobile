@@ -2,7 +2,7 @@
 id: registration
 contract_status: implemented
 implementation_status: implemented
-last_verified: 2026-10-07
+last_verified: 2026-11-06
 last_verified_ref: working-tree
 ---
 
@@ -13,6 +13,9 @@ Senha6–128 caracteres; duplicidade verificada na API. Backend força role clie
 outro perfil. Salva hash, não senha. Sucesso volta ao login; conta persiste após reload/restart.
 Sem obras até o dono vincular. Responsáveis são criados somente pelo dono na gestão de pessoas/obra.
 Consentimento, guia visto e vínculos persistem. Dados fictícios para atividade; não alegar LGPD integral.
+
+A troca entre login e cadastro preserva e-mail e nome durante o uso, com as senhas fora desse
+estado. O cadastro foca o primeiro campo inválido e bloqueia alterações durante o envio.
 
 UI RegisterScreen, validators registration.js, persistência backend/server.js/store.js.
 Testes unitários validam campos; integração cobre perfil forçado, duplicidade, consentimento e restart.

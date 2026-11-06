@@ -43,7 +43,7 @@ export default function RdoStart({ works, reports, userId, onStart }) {
         style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
         <Text style={styles.meta}>{work.contract}</Text>
         <Text style={styles.name}>{work.name}</Text>
-        <Text style={styles.action}>{action} ›</Text>
+        <Text style={styles.action}>{action}</Text>
       </Pressable>
       {hasDraft && existing ? <ActionButton label="Ver RDO de hoje" accessibilityLabel={`Ver RDO de hoje: ${work.name}`}
         secondary onPress={() => onStart(work, existing)} /> : null}

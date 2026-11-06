@@ -2,7 +2,7 @@
 id: authentication
 contract_status: implemented
 implementation_status: implemented
-last_verified: 2026-10-07
+last_verified: 2026-11-06
 last_verified_ref: working-tree
 ---
 
@@ -11,8 +11,10 @@ last_verified_ref: working-tree
 Login normaliza e-mail, mantém senha sensível a caixa e identifica dono/responsável/cliente sem
 seletor de perfil. Erros obrigatórios apenas após Entrar; mostrar/ocultar senha, busy, falha de rede
 e credencial inválida. API usa scrypt/salt, sessão aleatória256bits com expiração8h e hash no JSON.
-Senha/hash nunca retornam. Logout revoga;401 retorna ao login. Recarregar exige login, sem apagar dados.
-WelcomeScreen mantém mensagem por perfil e botão Continuar para workspace/guia.
+Senha/hash nunca retornam. A sessão fica no AsyncStorage por URL da API e é restaurada ao abrir o app. A API valida a sessão,
+e o 401 da sessão corrente limpa o acesso local. Sair exige confirmação e limpa o acesso mesmo
+sem rede. A revogação no servidor é tentada em paralelo. A primeira entrada exibe as boas-vindas
+com o perfil e segue para o guia. Veja ADR 008.
 
 Login compacto prioriza o formulário em telas pequenas. Depois de uma tentativa inválida, o foco
 vai para o primeiro campo com erro. O cadastro de Cliente tem ação própria; perfis da equipe

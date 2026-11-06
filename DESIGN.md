@@ -37,17 +37,19 @@ leitura principal.
 - `LoginScreen`: formulário responsivo com estados de foco, erro e carregamento.
 - `RegisterScreen`: cadastro de Cliente com nome, e-mail, senha e confirmação de senha.
 - `WelcomeScreen`: confirmação do acesso, perfil identificado, mensagem contextual e ação de sair.
-- `Workspace`: cabeçalho compacto, dashboard, lista de obras e navegação inferior Obras/Conta.
+- `Workspace` e `ScreenHeader`: pilhas por aba, título contextual, seta de voltar e navegação inferior ou lateral.
+- `Toast`, `ErrorState` e `EmptyState`: confirmação, recuperação de falhas e orientação em telas vazias.
+- `StatusBadge` e `Icon`: situação do RDO com cor, ícone e texto.
 - `Calendar`: grade mensal com indicadores e filtro de data.
 - `ReportEditor`/`ReportDetail`: registro, fotos, leitura, assinatura e versões.
 - `WorkEditor`: contrato e vínculos. `FormField`, `Choice`, `ActionButton`: controles compartilhados.
-- `AppFrame`: safe area e canvas mobile centralizado no PC (máximo480px).
+- `AppFrame`: safe area, canvas de até 480 px em telas estreitas e layout de até 1.280 px em telas web largas.
 
 ## Interaction
 
 Validar o formulário ao tocar em `Entrar`; apenas focar e sair de um campo vazio não deve apresentar
 erro. Mensagens aparecem junto ao problema e são anunciadas por leitores de tela. A senha pode ser
-mostrada ou ocultada, e o teclado avança do e-mail para a senha. Após o login, a tela de boas-vindas
+mostrada ou ocultada, e o teclado avança do e-mail para a senha. No primeiro acesso, a tela de boas-vindas
 informa o perfil associado à credencial e oferece uma ação clara para sair.
 
 Login e cadastro apresentam links textuais recíprocos abaixo da ação principal. O cadastro informa

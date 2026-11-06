@@ -1,8 +1,6 @@
 const { reportStatus } = require('./reportStatus.cjs');
 
-function normalize(value) {
-  return String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
-}
+const { normalizeText } = require('./text.cjs');
 
 function validReviewDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -13,12 +11,12 @@ function validReviewDate(value) {
 function filterReviewReports(reports, works, { status, query, date }) {
   if (date && !validReviewDate(date)) return [];
   const workById = new Map(works.map((work) => [work.id, work]));
-  const search = normalize(query);
+  const search = normalizeText(query);
   return reports.flatMap((report) => {
     const work = workById.get(report.workId);
     if (!work || (status !== 'all' && reportStatus(report) !== status)) return [];
     if (date && report.date !== date) return [];
-    if (search && !normalize(`${work.name} ${work.contract}`).includes(search)) return [];
+    if (search && !normalizeText(`${work.name} ${work.contract}`).includes(search)) return [];
     return [{ report, work }];
   }).sort((a, b) => b.report.date.localeCompare(a.report.date));
 }

@@ -11,19 +11,20 @@ let unauthorizedHandler;
 export const setUnauthorizedHandler = (handler) => { unauthorizedHandler = handler; };
 export const setToken = (value) => { token = value; };
 
-export async function request(route, method = 'GET', body, format = 'json') {
+export async function request(route, method = 'GET', body, format = 'json', { handleUnauthorized = true } = {}) {
+  const requestToken = token;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), format === 'pdf' ? 45000 : 20000);
   try {
     const send = format === 'pdf' && Platform.OS !== 'web' ? expoFetch : fetch;
     const response = await send(`${API_URL}/api${route}`, {
       method,
-      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      headers: { 'Content-Type': 'application/json', ...(requestToken ? { Authorization: `Bearer ${requestToken}` } : {}) },
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: controller.signal,
     });
     if (!response.ok) {
-      if (response.status === 401 && token && route !== '/login') unauthorizedHandler?.();
+      if (handleUnauthorized && response.status === 401 && requestToken && requestToken === token && route !== '/login') unauthorizedHandler?.();
       const data = await response.json().catch(() => ({}));
       const error = new Error(data.message || 'Não foi possível concluir a operação.');
       error.fields = data.fields; error.status = response.status;

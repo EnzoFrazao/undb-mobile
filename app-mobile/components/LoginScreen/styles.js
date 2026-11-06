@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../../theme/tokens';
+import { colors, radii, spacing, typography } from '../../theme/tokens';
 
 export default StyleSheet.create({
   screen: {
@@ -13,7 +13,7 @@ export default StyleSheet.create({
   },
   formSurface: {
     flexGrow: 1,
-    marginTop: -16,
+    marginTop: -spacing.lg,
     paddingTop: spacing.xxl,
     paddingHorizontal: spacing.xl,
     paddingBottom: spacing.xl,
@@ -32,7 +32,7 @@ export default StyleSheet.create({
   label: {
     marginBottom: spacing.sm,
     color: colors.ink,
-    fontSize: 16,
+    fontSize: typography.body,
     lineHeight: 20,
     fontWeight: '700',
   },
@@ -60,7 +60,7 @@ export default StyleSheet.create({
     minHeight: 54,
     paddingHorizontal: spacing.lg,
     color: colors.ink,
-    fontSize: 16,
+    fontSize: typography.body,
     lineHeight: 22,
   },
   passwordToggle: {
@@ -76,14 +76,14 @@ export default StyleSheet.create({
   },
   passwordToggleText: {
     color: colors.actionPressed,
-    fontSize: 15,
+    fontSize: typography.body,
     lineHeight: 20,
     fontWeight: '700',
   },
   fieldError: {
     marginTop: spacing.sm,
     color: colors.error,
-    fontSize: 14,
+    fontSize: typography.caption,
     lineHeight: 20,
     fontWeight: '600',
   },
@@ -98,7 +98,7 @@ export default StyleSheet.create({
   },
   formErrorText: {
     color: colors.error,
-    fontSize: 14,
+    fontSize: typography.caption,
     lineHeight: 20,
     fontWeight: '600',
   },
@@ -113,7 +113,7 @@ export default StyleSheet.create({
   },
   formNoticeText: {
     color: colors.success,
-    fontSize: 14,
+    fontSize: typography.caption,
     lineHeight: 20,
     fontWeight: '700',
   },
@@ -134,7 +134,7 @@ export default StyleSheet.create({
   },
   submitButtonText: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: typography.body,
     lineHeight: 22,
     fontWeight: '700',
   },
@@ -149,7 +149,7 @@ export default StyleSheet.create({
   },
   switchPrompt: {
     color: colors.muted,
-    fontSize: 15,
+    fontSize: typography.body,
     lineHeight: 22,
   },
   switchLink: {
@@ -163,14 +163,14 @@ export default StyleSheet.create({
   },
   switchLinkText: {
     color: colors.actionPressed,
-    fontSize: 15,
+    fontSize: typography.body,
     lineHeight: 22,
     fontWeight: '700',
   },
   footer: {
     marginTop: spacing.xl,
     color: colors.muted,
-    fontSize: 14,
+    fontSize: typography.caption,
     lineHeight: 20,
     textAlign: 'center',
   },

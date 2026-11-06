@@ -9,7 +9,7 @@ export default function Header({
   compact = false,
 }) {
   return (
-    <View style={[styles.container, compact && styles.compact]} accessibilityRole="header">
+    <View style={[styles.container, compact && styles.compact]}>
       <View
         style={styles.brandMark}
         importantForAccessibility="no-hide-descendants"
@@ -19,7 +19,7 @@ export default function Header({
       </View>
 
       <Text style={styles.brand}>{title}</Text>
-      <Text style={styles.heading}>{heading}</Text>
+      <Text accessibilityRole="header" style={styles.heading}>{heading}</Text>
       <Text style={styles.description}>{description}</Text>
     </View>
   );

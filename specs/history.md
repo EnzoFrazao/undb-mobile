@@ -1,5 +1,11 @@
 # Marcos do projeto
 
+## 2026-11-06 — Navegação, proteção de alterações e interface
+
+- Pilhas por aba, retorno no cabeçalho e no sistema, sessão local e confirmações de saída.
+- Feedback das operações, datas em português, listas virtualizadas, busca e visualização de fotos.
+- Contraste testado em tokens e navegação lateral com painel de obras em telas web largas.
+
 ## 2026-11-04 — Edição pelo autor antes da assinatura
 
 - Responsável vinculado ajusta o próprio RDO pendente diretamente, com data fixa, histórico e aviso de edição.

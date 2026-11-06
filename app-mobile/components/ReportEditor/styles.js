@@ -1,17 +1,14 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/tokens';
+import { colors, radii, spacing, typography } from '../../theme/tokens';
 export default StyleSheet.create({
-  title: { color: colors.ink, fontSize: 26, lineHeight: 32, fontWeight: '800', marginBottom: 6 },
-  subtitle: { color: colors.muted, fontSize: 15, lineHeight: 22, marginBottom: 20 },
-  draftNote: { color: colors.ink, backgroundColor: colors.focusWash, borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 14, lineHeight: 20 },
-  draftWarning: { gap: 8, marginBottom: 16 },
-  section: { color: colors.ink, fontSize: 19, fontWeight: '700', marginBottom: 8 },
-  actions: { flexDirection: 'row', gap: 10, marginBottom: 14 },
-  footer: { gap: 12, marginTop: 24 },
-  error: { color: colors.error, backgroundColor: colors.errorWash, padding: 14, borderRadius: 8, fontSize: 15, lineHeight: 22, marginTop: 12 },
-  photoRow: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: colors.border, paddingVertical: 8, gap: 10 },
-  thumbnail: { width: 52, height: 52, borderRadius: 8 },
-  photoLabel: { flex: 1, color: colors.ink, fontSize: 15 },
-  remove: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 },
+  subtitle: { color: colors.muted, fontSize: typography.body, lineHeight: 22, marginBottom: spacing.xl },
+  draftNote: { color: colors.ink, backgroundColor: colors.focusWash, borderRadius: radii.sm, padding: spacing.md, marginBottom: spacing.lg, fontSize: typography.caption, lineHeight: 20 },
+  section: { color: colors.ink, fontSize: typography.bodyLarge, fontWeight: '700', marginBottom: spacing.sm },
+  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md, marginBottom: spacing.md },
+  footer: { gap: spacing.md, marginTop: spacing.xl },
+  photoRow: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: colors.border, paddingVertical: spacing.sm, gap: spacing.md },
+  thumbnail: { width: 52, height: 52, borderRadius: radii.sm },
+  photoLabel: { flex: 1, color: colors.ink, fontSize: typography.body },
+  remove: { minHeight: 44, justifyContent: 'center', paddingHorizontal: spacing.sm },
   removeText: { color: colors.error, fontWeight: '600' },
 });

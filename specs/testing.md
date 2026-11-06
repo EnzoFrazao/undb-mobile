@@ -1,5 +1,23 @@
 # Estratégia e evidências de testes
 
+## Verificação de 2026-11-06 — Navegação e UX
+
+- 22 testes do app e duas integrações da API aprovados. Os novos testes cobrem pilhas
+  independentes, voltar após salvar, sessão por URL da API, estado alterado, datas civis,
+  percentual decimal, busca sem acentos, plural e contraste de texto e controles.
+- Exportação Expo SDK 57 concluída para Web, Android e iOS. A inspeção de fonte verificou a
+  convenção de dois arquivos nos 31 componentes e a ausência de objetos de estilo inline.
+- Chrome com API de dados fictícios isolada. Dono: busca de obra, retorno por seta e histórico do
+  navegador, confirmação com formulário alterado, abas com contexto preservado, foto em tela
+  cheia, zoom, cancelamento de remoção, edição, assinatura, leitura de avisos em lote, F5 e saída
+  com falha de rede. Responsável: salvar e retomar rascunho, enviar com avanço decimal e voltar sem
+  reabrir o editor. Cliente: isolamento de obra e data do calendário preservada ao voltar.
+- Inspeção de layout em 320 e 1.200 px. Uma fila sintética com 120 registros no Chrome montou
+  apenas parte das linhas e permitiu rolar até o último item. O teste não mede FPS.
+- Android e iOS foram verificados por bundle. Câmera, gesto de voltar, teclado, fonte do sistema
+  e TalkBack/VoiceOver ainda precisam de verificação em aparelho. O contraste medido se refere
+  aos pares de tokens do teste.
+
 ## Verificação de 2026-11-04: edição pelo autor
 
 - 14 testes do app e duas integrações da API aprovados. O Responsável vinculado edita o próprio

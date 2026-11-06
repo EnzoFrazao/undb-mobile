@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 
+import { focusFirstError } from '../../services/formErrors';
 import Header from '../Header';
 import Choice from '../Choice';
 import {
@@ -18,20 +19,29 @@ import {
 import { colors } from '../../theme/tokens';
 import styles from './styles';
 
-export default function RegisterScreen({ onRegistered, onLoginPress }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+export default function RegisterScreen({ onRegistered, onLoginPress, initial, onDraftChange }) {
+  const [name, setName] = useState(initial?.name || '');
+  const [email, setEmail] = useState(initial?.email || '');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [errors, setErrors] = useState({});
   const [consent, setConsent] = useState(false);
   const [formError, setFormError] = useState('');
   const [busy, setBusy] = useState(false);
+  const sending = useRef(false);
+  const scrollRef = useRef(null);
+  const nameInputRef = useRef(null);
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const confirmationInputRef = useRef(null);
+
+  function focusError(nextErrors) {
+    const refs = { name: nameInputRef, email: emailInputRef, password: passwordInputRef, passwordConfirmation: confirmationInputRef };
+    focusFirstError(nextErrors, Object.keys(refs), refs, scrollRef);
+  }
 
   function updateField(field, value) {
     const setters = {
@@ -42,6 +52,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
     };
 
     setters[field](value);
+    if (field === 'name' || field === 'email') onDraftChange?.({ name, email, [field]: value });
 
     if (
       errors[field] ||
@@ -58,8 +69,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
   }
 
   async function handleSubmit() {
-    if (busy) return;
-    Keyboard.dismiss();
+    if (sending.current) return;
 
     const fields = { name, email, password, passwordConfirmation };
     const nextErrors = validateRegistrationFields(fields);
@@ -67,13 +77,16 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
+      focusError(nextErrors);
       return;
     }
+    Keyboard.dismiss();
+    sending.current = true;
 
     setBusy(true); setFormError('');
     try { await onRegistered({ ...fields, consent }); }
-    catch (error) { setFormError(error.message); if (error.fields) setErrors(error.fields); }
-    finally { setBusy(false); }
+    catch (error) { setFormError(error.message); if (error.fields) { setErrors(error.fields); focusError(error.fields); } }
+    finally { sending.current = false; setBusy(false); }
   }
 
   return (
@@ -82,6 +95,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
+        ref={scrollRef}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
@@ -103,6 +117,8 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                 ]}
               >
                 <TextInput
+                  ref={nameInputRef}
+                  maxLength={100}
                   value={name}
                   onChangeText={(value) => updateField('name', value)}
                   onFocus={() => setFocusedField('name')}
@@ -113,7 +129,9 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                   style={styles.input}
                   autoCapitalize="words"
                   autoComplete="name"
+                  submitBehavior="submit"
                   returnKeyType="next"
+                  editable={!busy}
                   accessibilityLabel="Nome"
                 />
               </View>
@@ -135,6 +153,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
               >
                 <TextInput
                   ref={emailInputRef}
+                  maxLength={254}
                   value={email}
                   onChangeText={(value) => updateField('email', value)}
                   onFocus={() => setFocusedField('email')}
@@ -148,7 +167,9 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                   autoCorrect={false}
                   inputMode="email"
                   keyboardType="email-address"
+                  submitBehavior="submit"
                   returnKeyType="next"
+                  editable={!busy}
                   accessibilityLabel="E-mail"
                 />
               </View>
@@ -177,17 +198,21 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                   onSubmitEditing={() =>
                     confirmationInputRef.current?.focus()
                   }
-                  placeholder="Mínimo de 6 caracteres"
+                  placeholder="Digite uma senha"
                   placeholderTextColor={colors.placeholder}
                   style={styles.input}
                   autoCapitalize="none"
+                  maxLength={128}
                   autoComplete="new-password"
                   autoCorrect={false}
                   secureTextEntry={!passwordVisible}
+                  submitBehavior="submit"
                   returnKeyType="next"
+                  editable={!busy}
                   accessibilityLabel="Senha"
                 />
                 <Pressable
+                  disabled={busy}
                   onPress={() => setPasswordVisible((current) => !current)}
                   style={({ pressed }) => [
                     styles.passwordToggle,
@@ -195,7 +220,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                   ]}
                   accessibilityRole="button"
                   accessibilityLabel={
-                    passwordVisible ? 'Ocultar senhas' : 'Mostrar senhas'
+                    passwordVisible ? 'Ocultar senha' : 'Mostrar senha'
                   }
                   accessibilityState={{ expanded: passwordVisible }}
                   hitSlop={4}
@@ -205,6 +230,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                   </Text>
                 </Pressable>
               </View>
+              <Text style={styles.switchPrompt}>Use de 6 a 128 caracteres.</Text>
               {errors.password ? (
                 <Text style={styles.fieldError} accessibilityLiveRegion="polite">
                   {errors.password}
@@ -235,12 +261,18 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                   placeholderTextColor={colors.placeholder}
                   style={styles.input}
                   autoCapitalize="none"
+                  maxLength={128}
                   autoComplete="new-password"
                   autoCorrect={false}
-                  secureTextEntry={!passwordVisible}
+                  secureTextEntry={!confirmationVisible}
                   returnKeyType="done"
+                  editable={!busy}
                   accessibilityLabel="Confirmar senha"
                 />
+                <Pressable disabled={busy} accessibilityRole="button" accessibilityLabel={confirmationVisible ? 'Ocultar confirmação' : 'Mostrar confirmação'}
+                  onPress={() => setConfirmationVisible(!confirmationVisible)} style={styles.passwordToggle}>
+                  <Text style={styles.passwordToggleText}>{confirmationVisible ? 'Ocultar' : 'Mostrar'}</Text>
+                </Pressable>
               </View>
               {errors.passwordConfirmation ? (
                 <Text style={styles.fieldError} accessibilityLiveRegion="polite">
@@ -249,7 +281,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
               ) : null}
             </View>
 
-            <Choice label="Concordo com o uso do meu nome e e-mail para identificação e acesso às minhas obras." selected={consent} onPress={() => { setConsent(!consent); setErrors((previous) => ({ ...previous, consent: undefined })); }} />
+            <Choice disabled={busy} label="Concordo com o uso do meu nome e e-mail para identificação e acesso às minhas obras." selected={consent} onPress={() => { setConsent(!consent); setErrors((previous) => ({ ...previous, consent: undefined })); }} />
             {errors.consent ? <Text style={styles.fieldError}>{errors.consent}</Text> : null}
             {formError ? <Text style={styles.fieldError} accessibilityRole="alert">{formError}</Text> : null}
             <Pressable
@@ -260,6 +292,7 @@ export default function RegisterScreen({ onRegistered, onLoginPress }) {
                 pressed && styles.submitButtonPressed,
               ]}
               accessibilityRole="button"
+              accessibilityState={{ disabled: busy, busy }}
               accessibilityLabel="Criar conta"
               accessibilityHint="Cria uma conta local com o perfil Cliente"
             >
