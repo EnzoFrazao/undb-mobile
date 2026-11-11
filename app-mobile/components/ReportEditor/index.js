@@ -194,35 +194,40 @@ export default function ReportEditor({ work, report, resubmitting = false, lockD
     {draftKey ? draftStatus === 'failed' ? <ErrorState message="Não foi possível salvar o rascunho neste dispositivo."
       onRetry={editable ? () => persistDraft(latest.current) : undefined} retryLabel="Tentar salvar rascunho" />
       : <Text style={styles.draftNote}>{draftMessage[draftStatus]}</Text> : null}
-    <DateField {...fieldProps('date')} label="Data do relatório" editable={editable && !dateLocked}
-      hint={dateLocked ? 'A data original do RDO é preservada.' : undefined} returnKeyType="next" submitBehavior="submit"
-      onSubmitEditing={() => refs.activities.current?.focus()} />
-    {fieldOrder.slice(1).map((field, index) => {
-      const multiline = ['activities', 'materials', 'occurrences'].includes(field);
-      const next = fieldOrder[index + 2];
-      return <FormField key={field} {...fieldProps(field)} label={fieldLabels[field]} optional={index > 1} multiline={multiline}
-        keyboardType={field === 'progress' ? 'decimal-pad' : 'default'} inputMode={field === 'progress' ? 'decimal' : undefined}
-        returnKeyType={!multiline && next ? 'next' : undefined} submitBehavior={!multiline && next ? 'submit' : undefined}
-        onSubmitEditing={!multiline && next ? () => refs[next].current?.focus() : undefined} />;
-    })}
-    <Text accessibilityRole="header" style={styles.section}>Fotos da obra</Text>
-    <Text style={styles.subtitle}>Até 10 imagens, com no máximo 8 MB cada.</Text>
-    <Choice label="Tenho autorização para compartilhar estas imagens com as pessoas vinculadas à obra."
-      disabled={!editable} selected={consent} onPress={() => setConsent(!consent)} />
-    <View style={styles.actions}>
-      <ActionButton label="Galeria" icon="gallery" secondary busy={Boolean(uploading)} busyLabel={uploading} disabled={!editable} onPress={() => pick(false)} />
-      {Platform.OS !== 'web' ? <ActionButton label="Câmera" icon="camera" secondary disabled={!editable} onPress={() => pick(true)} /> : null}
+    <View style={styles.panel}>
+      <Text accessibilityRole="header" style={styles.section}>Registro do dia</Text>
+      <DateField {...fieldProps('date')} label="Data do relatório" editable={editable && !dateLocked}
+        hint={dateLocked ? 'A data original do RDO é preservada.' : undefined} returnKeyType="next" submitBehavior="submit"
+        onSubmitEditing={() => refs.activities.current?.focus()} />
+      {fieldOrder.slice(1).map((field, index) => {
+        const multiline = ['activities', 'materials', 'occurrences'].includes(field);
+        const next = fieldOrder[index + 2];
+        return <FormField key={field} {...fieldProps(field)} label={fieldLabels[field]} optional={index > 1} multiline={multiline}
+          keyboardType={field === 'progress' ? 'decimal-pad' : 'default'} inputMode={field === 'progress' ? 'decimal' : undefined}
+          returnKeyType={!multiline && next ? 'next' : undefined} submitBehavior={!multiline && next ? 'submit' : undefined}
+          onSubmitEditing={!multiline && next ? () => refs[next].current?.focus() : undefined} />;
+      })}
     </View>
-    {photos.map((photo, index) => <View key={photo.key}>
-      <View style={styles.photoRow}>
-        {photo.uri ? <Image source={{ uri: photo.uri }} style={styles.thumbnail} accessible={false} /> : null}
-        <Text style={styles.photoLabel}>Foto {index + 1}{photo.id ? ' anexada' : ''}</Text>
-        <Pressable disabled={!editable} accessibilityRole="button" accessibilityLabel={`Remover foto ${index + 1}`}
-          onPress={() => setConfirmation({ title: `Remover foto ${index + 1}?`, message: 'A foto será retirada deste RDO.', label: 'Remover foto', action: () => setPhotos((items) => items.filter((item) => item.key !== photo.key)) })}
-          style={styles.remove}><Text style={styles.removeText}>Remover</Text></Pressable>
+    <View style={styles.panel}>
+      <Text accessibilityRole="header" style={styles.section}>Fotos da obra</Text>
+      <Text style={styles.subtitle}>Até 10 imagens, com no máximo 8 MB cada.</Text>
+      <Choice label="Tenho autorização para compartilhar estas imagens com as pessoas vinculadas à obra."
+        disabled={!editable} selected={consent} onPress={() => setConsent(!consent)} />
+      <View style={styles.actions}>
+        <ActionButton label="Galeria" icon="gallery" secondary busy={Boolean(uploading)} busyLabel={uploading} disabled={!editable} onPress={() => pick(false)} />
+        {Platform.OS !== 'web' ? <ActionButton label="Câmera" icon="camera" secondary disabled={!editable} onPress={() => pick(true)} /> : null}
       </View>
-      {photo.error ? <ErrorState message={photo.error} onRetry={photo.retryable && editable ? () => retry(photo) : undefined} /> : null}
-    </View>)}
+      {photos.map((photo, index) => <View key={photo.key}>
+        <View style={styles.photoRow}>
+          {photo.uri ? <Image source={{ uri: photo.uri }} style={styles.thumbnail} accessible={false} /> : null}
+          <Text style={styles.photoLabel}>Foto {index + 1}{photo.id ? ' anexada' : ''}</Text>
+          <Pressable disabled={!editable} accessibilityRole="button" accessibilityLabel={`Remover foto ${index + 1}`}
+            onPress={() => setConfirmation({ title: `Remover foto ${index + 1}?`, message: 'A foto será retirada deste RDO.', label: 'Remover foto', action: () => setPhotos((items) => items.filter((item) => item.key !== photo.key)) })}
+            style={styles.remove}><Text style={styles.removeText}>Remover</Text></Pressable>
+        </View>
+        {photo.error ? <ErrorState message={photo.error} onRetry={photo.retryable && editable ? () => retry(photo) : undefined} /> : null}
+      </View>)}
+    </View>
     {error ? <ErrorState message={error} /> : null}
     <View style={styles.footer}>
       <ActionButton testID="rdo-save" label={resubmitting ? 'Reenviar RDO' : report?.correction ? 'Salvar e voltar à revisão' : report ? 'Salvar alterações' : 'Enviar RDO'}

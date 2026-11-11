@@ -1,63 +1,57 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing, typography } from '../../theme/tokens';
+import { colors, spacing, typography, fonts } from '../../theme/tokens';
 
 export default StyleSheet.create({
   container: {
-    minHeight: 220,
-    paddingTop: spacing.xxl,
-    paddingBottom: spacing.xxl,
-    paddingHorizontal: spacing.xl,
     backgroundColor: colors.brand,
-    justifyContent: 'flex-end',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xl,
   },
-  compact: { minHeight: 184, paddingTop: spacing.xxl, paddingBottom: spacing.xl },
-  brandMark: {
-    position: 'absolute',
-    top: 28,
-    right: spacing.xl,
-    width: 52,
-    height: 44,
+  wide: {
+    width: '43%',
+    minHeight: 560,
+    paddingHorizontal: spacing.xxxl,
+    paddingVertical: spacing.xxxl,
+    justifyContent: 'center',
   },
-  brandMarkBack: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 32,
-    height: 32,
-    borderRadius: radii.md,
-    backgroundColor: colors.action,
-  },
-  brandMarkFront: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    width: 32,
-    height: 32,
-    borderRadius: radii.md,
-    backgroundColor: colors.brandMarkLight,
-  },
-  brand: {
-    maxWidth: '78%',
+  signature: { width: 156, height: 40 },
+  wideSignature: { position: 'absolute', top: spacing.xxxl, left: spacing.xxxl, width: 198, height: 51 },
+  copy: { marginTop: spacing.xl },
+  wideCopy: { marginTop: 0, marginBottom: spacing.xxl },
+  title: {
     color: colors.white,
-    fontSize: typography.display,
-    lineHeight: 34,
-    fontWeight: '800',
-    letterSpacing: -0.6,
+    fontSize: 22,
+    lineHeight: 28,
+    fontFamily: fonts.extraBold,
+    letterSpacing: -0.8,
   },
-  heading: {
-    marginTop: spacing.lg,
-    color: colors.white,
-    fontSize: typography.title,
-    lineHeight: 29,
-    fontWeight: '700',
-  },
+  wideTitle: { fontSize: 36, lineHeight: 42, letterSpacing: -1 },
   description: {
     marginTop: spacing.sm,
-    maxWidth: 360,
+    maxWidth: 320,
     color: colors.textOnBrand,
+    fontFamily: fonts.regular,
     fontSize: typography.body,
     lineHeight: 24,
-    fontWeight: '500',
+  },
+  pattern: {
+    position: 'absolute',
+  },
+  compactPattern: {
+    width: 280,
+    height: 145,
+    top: -28,
+    right: -132,
+    opacity: 0.26,
+  },
+  widePattern: {
+    width: 560,
+    height: 291,
+    bottom: -88,
+    right: -48,
+    opacity: 0.38,
   },
 });

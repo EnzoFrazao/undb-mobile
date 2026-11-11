@@ -1,31 +1,8 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing, typography } from '../../theme/tokens';
+import { colors, radii, spacing, typography, fonts } from '../../theme/tokens';
 
 export default StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.brand,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    backgroundColor: colors.brand,
-  },
-  formSurface: {
-    flexGrow: 1,
-    marginTop: -spacing.lg,
-    paddingTop: spacing.xxl,
-    paddingHorizontal: spacing.xl,
-    paddingBottom: spacing.xl,
-    borderTopLeftRadius: radii.lg,
-    borderTopRightRadius: radii.lg,
-    backgroundColor: colors.canvas,
-  },
-  form: {
-    width: '100%',
-    maxWidth: 480,
-    alignSelf: 'center',
-  },
   fieldGroup: {
     marginBottom: spacing.lg,
   },
@@ -34,7 +11,7 @@ export default StyleSheet.create({
     color: colors.ink,
     fontSize: typography.body,
     lineHeight: 20,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   inputShell: {
     minHeight: 56,
@@ -57,18 +34,20 @@ export default StyleSheet.create({
   },
   input: {
     flex: 1,
+    minWidth: 0,
     minHeight: 54,
     paddingHorizontal: spacing.lg,
     color: colors.ink,
+    fontFamily: fonts.regular,
     fontSize: typography.body,
     lineHeight: 22,
   },
   passwordToggle: {
-    minWidth: 72,
+    minWidth: 64,
     minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.sm,
     borderRadius: radii.sm,
   },
   passwordTogglePressed: {
@@ -76,16 +55,16 @@ export default StyleSheet.create({
   },
   passwordToggleText: {
     color: colors.actionPressed,
-    fontSize: typography.body,
+    fontSize: typography.caption,
     lineHeight: 20,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   fieldError: {
     marginTop: spacing.sm,
     color: colors.error,
     fontSize: typography.caption,
     lineHeight: 20,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   submitButton: {
     minHeight: 56,
@@ -102,7 +81,7 @@ export default StyleSheet.create({
     color: colors.white,
     fontSize: typography.body,
     lineHeight: 22,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   switchRow: {
     minHeight: 48,
@@ -115,6 +94,7 @@ export default StyleSheet.create({
   },
   switchPrompt: {
     color: colors.muted,
+    fontFamily: fonts.regular,
     fontSize: typography.body,
     lineHeight: 22,
   },
@@ -131,13 +111,6 @@ export default StyleSheet.create({
     color: colors.actionPressed,
     fontSize: typography.body,
     lineHeight: 22,
-    fontWeight: '700',
-  },
-  footer: {
-    marginTop: spacing.xl,
-    color: colors.muted,
-    fontSize: typography.caption,
-    lineHeight: 20,
-    textAlign: 'center',
+    fontFamily: fonts.bold,
   },
 });

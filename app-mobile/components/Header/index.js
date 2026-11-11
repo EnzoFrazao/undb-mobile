@@ -1,26 +1,30 @@
-import { Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 
+import { expo } from '../../app.json';
 import styles from './styles';
 
-export default function Header({
-  title = 'Diário de Obra',
-  heading = 'Acesse sua conta',
-  description = 'Entre com seu e-mail e senha para continuar.',
-  compact = false,
-}) {
+export default function Header({ wide }) {
   return (
-    <View style={[styles.container, compact && styles.compact]}>
-      <View
-        style={styles.brandMark}
-        importantForAccessibility="no-hide-descendants"
-      >
-        <View style={styles.brandMarkBack} />
-        <View style={styles.brandMarkFront} />
+    <View style={[styles.container, wide && styles.wide]}>
+      <Image
+        source={require('../../assets/planengen-pattern.png')}
+        style={[styles.pattern, wide ? styles.widePattern : styles.compactPattern]}
+        resizeMode="cover"
+        accessible={false}
+        importantForAccessibility="no"
+        pointerEvents="none"
+      />
+      <Image
+        source={require('../../assets/planengen-signature.png')}
+        style={[styles.signature, wide && styles.wideSignature]}
+        resizeMode="contain"
+        accessible
+        accessibilityLabel="Planengen Consultoria e Construção"
+      />
+      <View style={[styles.copy, wide && styles.wideCopy]}>
+        <Text style={[styles.title, wide && styles.wideTitle]}>{expo.name}</Text>
+        <Text style={styles.description}>Registre e acompanhe o andamento das suas obras.</Text>
       </View>
-
-      <Text style={styles.brand}>{title}</Text>
-      <Text accessibilityRole="header" style={styles.heading}>{heading}</Text>
-      <Text style={styles.description}>{description}</Text>
     </View>
   );
 }

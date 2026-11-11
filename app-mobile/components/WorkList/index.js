@@ -49,9 +49,14 @@ export default function WorkList({ works, reports, activeUser, pendingCount, onN
           <View style={styles.summaryDivider} />
           <View style={styles.summaryItem}><Text style={styles.summaryValue}>{isOwner ? pendingCount : reports.length}</Text><Text style={styles.summaryLabel}>{isOwner ? 'para assinatura' : 'relatórios enviados'}</Text></View>
         </View>
-        {isOwner && works.length > 0 ? <View style={styles.primaryAction}><ActionButton label="Cadastrar obra" onPress={onNew} /></View> : null}
-        {isOwner && pendingCount > 0 ? <View style={styles.primaryAction}><ActionButton label="Revisar RDOs pendentes" secondary onPress={onReview} /></View> : null}
-        {activeUser.role === 'operator' && works.length > 0 ? <View style={styles.primaryAction}><ActionButton label="Registrar RDO" onPress={onRdo} /></View> : null}
+        {works.length > 0 && (isOwner || activeUser.role === 'operator') ? <View style={styles.actions}>
+          <View style={styles.action}>
+            <ActionButton label={isOwner ? 'Cadastrar obra' : 'Registrar RDO'} onPress={isOwner ? onNew : onRdo} />
+          </View>
+          {isOwner && pendingCount > 0 ? <View style={styles.action}>
+            <ActionButton label="Revisar RDOs pendentes" secondary onPress={onReview} />
+          </View> : null}
+        </View> : null}
       </> : <Text accessibilityRole="header" style={styles.section}>Obras e contratos</Text>}
       {works.length > 0 ? <>
         <SearchField label="Buscar obra" value={query} onChangeText={onQuery} placeholder="Nome, endereço ou contrato" />

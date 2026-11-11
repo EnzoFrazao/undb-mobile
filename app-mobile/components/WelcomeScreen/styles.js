@@ -1,71 +1,17 @@
 import { StyleSheet } from 'react-native';
-
-import { colors, radii, spacing, typography } from '../../theme/tokens';
+import { colors, radii, spacing, typography, fonts } from '../../theme/tokens';
 
 export default StyleSheet.create({
-  screen: {
-    flexGrow: 1,
-    backgroundColor: colors.brand,
-  },
-  contentSurface: {
-    flexGrow: 1,
-    marginTop: -spacing.lg,
-    paddingTop: spacing.xxl,
-    paddingHorizontal: spacing.xl,
-    paddingBottom: spacing.xl,
-    borderTopLeftRadius: radii.lg,
-    borderTopRightRadius: radii.lg,
-    backgroundColor: colors.canvas,
-  },
-  content: {
-    width: '100%',
-    maxWidth: 480,
-    alignSelf: 'center',
-  },
-  profileCaption: {
-    marginBottom: spacing.xs,
-    color: colors.muted,
-    fontSize: typography.body,
-    lineHeight: 22,
-    fontWeight: '600',
-  },
-  profileName: {
-    marginBottom: spacing.lg,
-    color: colors.ink,
-    fontSize: typography.title,
-    lineHeight: 30,
-    fontWeight: '800',
-  },
-  welcomeMessage: {
-    marginBottom: spacing.xxl,
-    color: colors.ink,
-    fontSize: typography.body,
-    lineHeight: 26,
-  },
-  logoutButton: {
-    minHeight: 56,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: colors.action,
-    borderRadius: radii.md,
+  profile: {
     backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.borderSubtle,
+    borderRadius: radii.md,
+    padding: spacing.lg,
+    marginBottom: spacing.xl,
   },
-  logoutButtonPressed: {
-    backgroundColor: colors.focusWash,
-    transform: [{ scale: 0.99 }],
-  },
-  logoutButtonText: {
-    color: colors.actionPressed,
-    fontSize: typography.body,
-    lineHeight: 22,
-    fontWeight: '700',
-  },
-  footer: {
-    marginTop: spacing.xxl,
-    color: colors.muted,
-    fontSize: typography.caption,
-    lineHeight: 20,
-    textAlign: 'center',
-  },
+  profileCaption: { color: colors.muted, fontSize: typography.caption, fontFamily: fonts.semibold },
+  profileName: { color: colors.ink, fontSize: typography.title, fontFamily: fonts.extraBold, marginTop: spacing.xs },
+  welcomeMessage: { color: colors.ink, fontFamily: fonts.regular, fontSize: typography.body, lineHeight: 24, marginTop: spacing.md },
+  actions: { gap: spacing.md },
 });

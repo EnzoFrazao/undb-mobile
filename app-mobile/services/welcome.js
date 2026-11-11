@@ -1,3 +1,5 @@
+const { expo } = require('../app.json');
+
 const welcomeMessages = {
   owner:
     'Você entrou como Dono/Empresa. Aqui você poderá acompanhar as obras e os registros da equipe.',
@@ -10,7 +12,7 @@ const welcomeMessages = {
 function getWelcomeMessage(role) {
   return (
     welcomeMessages[role] ??
-    'Seu acesso foi confirmado. Você já pode continuar no Diário de Obra.'
+    `Seu acesso foi confirmado. Você já pode continuar em ${expo.name}.`
   );
 }
 

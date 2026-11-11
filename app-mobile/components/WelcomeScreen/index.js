@@ -1,6 +1,6 @@
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import Header from '../Header';
+import AuthLayout from '../AuthLayout';
 import ActionButton from '../ActionButton';
 import { getWelcomeMessage } from '../../services/welcome';
 import styles from './styles';
@@ -9,38 +9,19 @@ export default function WelcomeScreen({ user, onLogout, onContinue }) {
   const welcomeMessage = getWelcomeMessage(user.role);
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.screen}
-      showsVerticalScrollIndicator={false}
+    <AuthLayout
+      heading={`Olá, ${user.name}`}
+      description="Seu acesso foi identificado com sucesso."
     >
-      <Header
-        heading={`Olá, ${user.name}`}
-        description="Seu acesso foi identificado com sucesso."
-      />
-
-      <View style={styles.contentSurface}>
-        <View style={styles.content}>
-          <Text style={styles.profileCaption}>Perfil de acesso</Text>
-          <Text style={styles.profileName}>{user.roleLabel}</Text>
-          <Text style={styles.welcomeMessage}>{welcomeMessage}</Text>
-          <ActionButton label="Continuar" onPress={onContinue} />
-
-          <Pressable
-            onPress={onLogout}
-            style={({ pressed }) => [
-              styles.logoutButton,
-              pressed && styles.logoutButtonPressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel="Sair"
-            accessibilityHint="Encerra o acesso e volta para a tela de login"
-          >
-            <Text style={styles.logoutButtonText}>Sair</Text>
-          </Pressable>
-        </View>
-
-        <Text style={styles.footer}>Diário de Obra Mobile</Text>
+      <View style={styles.profile}>
+        <Text style={styles.profileCaption}>Perfil de acesso</Text>
+        <Text style={styles.profileName}>{user.roleLabel}</Text>
+        <Text style={styles.welcomeMessage}>{welcomeMessage}</Text>
       </View>
-    </ScrollView>
+      <View style={styles.actions}>
+        <ActionButton label="Continuar" onPress={onContinue} />
+        <ActionButton label="Sair" onPress={onLogout} secondary />
+      </View>
+    </AuthLayout>
   );
 }

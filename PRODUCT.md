@@ -12,7 +12,7 @@ associado à credencial.
 
 ## Product Purpose
 
-O Diário de Obra Mobile digitaliza registros e acompanhamento de obras. A entrega acadêmica usa
+O Workfy - Diário de Obra digitaliza registros e acompanhamento de obras. A entrega acadêmica usa
 backend Node com JSON, cadastro persistente, obras vinculadas, relatórios com fotos e calendário,
 revisão/assinatura pelo dono e consulta restrita por cliente. Assinatura acadêmica não certificada.
 

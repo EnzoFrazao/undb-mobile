@@ -21,6 +21,6 @@ test('personaliza a mensagem de boas-vindas para cada perfil', () => {
 test('mantém uma mensagem segura para um perfil desconhecido', () => {
   assert.equal(
     getWelcomeMessage('unknown'),
-    'Seu acesso foi confirmado. Você já pode continuar no Diário de Obra.',
+    'Seu acesso foi confirmado. Você já pode continuar em Workfy - Diário de Obra.',
   );
 });

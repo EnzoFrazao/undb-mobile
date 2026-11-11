@@ -2,7 +2,7 @@
 id: works-reports
 contract_status: implemented
 implementation_status: implemented-with-limitations
-last_verified: 2026-11-06
+last_verified: 2026-11-11
 last_verified_ref: working-tree
 ---
 
@@ -53,5 +53,7 @@ Exportação da versão atual via API autenticada, para os mesmos usuários que 
 Inclui obra/contrato, campos técnicos, autoria, fotos disponíveis e confirmação eletrônica acadêmica,
 quando existente. A versão esperada evita exportar um conteúdo mais recente sem aviso. Navegador
 baixa o arquivo; Android/iOS compartilham uma cópia em cache. Não assina digitalmente o arquivo PDF.
+Todas as páginas do PDF recebem o cabeçalho da Planengen e do Workfy, com indicação de cópia
+para consulta e paginação no rodapé. Ver ADR 010.
 Metas de velocidade4G, carga, avaliação jurídica e aparelho real não verificadas. Clima automático
 continua futuro. Evidências em testing.md; decisões em ADR002 e ADR003.

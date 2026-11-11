@@ -1,5 +1,31 @@
 # Estratégia e evidências de testes
 
+## Verificação de 2026-11-11 — Manrope e timbrado de RDO
+
+- 22 testes do aplicativo e duas integrações da API aprovados. Os quatro pesos locais de
+  Manrope estão presentes nos bundles Web, Android e iOS.
+- Chrome confirmou Manrope carregada nos títulos, campos, botões e listas em 320, 390, 900
+  e 1.200 px, com navegação de login até o detalhe de RDO e download pelo botão Exportar PDF.
+- Foram renderizados um relatório de uma página e um assinado de duas páginas com imagem
+  sintética. Assinatura da Planengen, nome Workfy, linhas e paginação aparecem em todas as
+  páginas. O aplicativo nativo foi verificado por bundle.
+
+## Verificação de 2026-11-11 — Identidade visual Planengen
+
+- 22 testes do app e duas integrações da API aprovados. Os pares de contraste incluem
+  navegação escura, seleção, indicadores azuis e botões com texto branco.
+- Exportação Expo concluída para Web, Android e iOS. Os componentes mantêm
+  `index.js` e `styles.js` com `StyleSheet.create`.
+- Chrome em 320, 390, 768, 900 e 1.200 px com API de teste e dados fictícios. O roteiro
+  de Dono percorreu acesso, Obras, Histórico, detalhe e formulário de RDO, Revisão e Avisos.
+  Foram verificados o erro de login, a tela de cadastro, o encaixe do controle de senha e
+  a validação do editor de RDO.
+- O Responsável abriu o editor pela ação Registrar RDO e o Cliente consultou a obra
+  vinculada. A interface nativa foi verificada por bundle. A aparência dos ícones e o
+  comportamento em aparelho físico ainda precisam de validação.
+- Após a mudança de nome, o Chrome exibiu Workfy - Diário de Obra no login e no título
+  da aba em 320, 900 e 1.200 px. Os 22 testes do app e as duas integrações da API passaram novamente.
+
 ## Verificação de 2026-11-06 — Navegação e UX
 
 - 22 testes do app e duas integrações da API aprovados. Os novos testes cobrem pilhas

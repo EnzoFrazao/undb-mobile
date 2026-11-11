@@ -8,6 +8,7 @@ import { useExitGuard } from '../../services/useExitGuard';
 import ActionButton from '../ActionButton';
 import Choice from '../Choice';
 import FormField from '../FormField';
+import StatusBadge from '../StatusBadge';
 import { request } from '../../services/api';
 import { exportReport } from '../../services/reportExport';
 import { displayDate, displayTime } from '../../services/dates';
@@ -104,10 +105,18 @@ export default function ReportDetail({ reportId, revision, user, work, submitted
   const mayEditOwn = user.role === 'operator' && user.id === report.authorId && reportStatus(report) === 'pending';
   return <View>
     {selectedVersion ? <Text accessibilityRole="header" style={styles.title}>RDO de {displayDate(content.date)}</Text> : null}
-    {work ? <Text style={styles.small}>{work.name} · {work.contract}</Text> : null}
     {submitted ? <Text style={styles.success} accessibilityLiveRegion="polite">RDO enviado. O dono da empresa já pode consultar o registro.</Text> : null}
     {draftCleanupFailed ? <Text style={styles.error} accessibilityRole="alert">O RDO foi enviado, mas não foi possível limpar o rascunho neste dispositivo.</Text> : null}
-    <View style={[styles.badge, signature && styles.signedBadge]}><Text style={styles.badgeText}>{signature ? 'Assinado · edição bloqueada' : reportStatusLabel(content)}</Text></View>
+    <View style={styles.overview}>
+      <View style={styles.overviewTop}>
+        {work ? <Text style={styles.contract}>{work.name} · {work.contract}</Text> : null}
+        <StatusBadge status={reportStatus(content)} label={signature ? 'Assinado · edição bloqueada' : reportStatusLabel(content)} />
+      </View>
+      <View style={styles.progress}>
+        <Text style={styles.progressNumber}>{content.progress.toLocaleString('pt-BR')}%</Text>
+        <Text style={styles.progressLabel}>de avanço informado</Text>
+      </View>
+    </View>
     {selectedVersion ? <View style={styles.versionNotice}><Text style={styles.text}>Visualizando versão {selectedVersion.number}, de {displayTime(selectedVersion.at)}.</Text><ActionButton label="Voltar à versão atual" secondary onPress={() => setSelectedVersion(null)} /></View> : null}
     {content.correction ? <View style={styles.versionNotice}>
       <Text style={styles.versionTitle}>Correção solicitada</Text>
@@ -122,7 +131,6 @@ export default function ReportDetail({ reportId, revision, user, work, submitted
       {exportError ? <Text style={styles.error} accessibilityRole="alert">{exportError}</Text> : null}
     </View> : null}
     <Text accessibilityRole="header" style={styles.caption}>Atividades realizadas</Text><Text style={styles.text}>{content.activities}</Text>
-    <View style={styles.progress}><Text style={styles.progressNumber}>{content.progress.toLocaleString('pt-BR')}%</Text><Text style={styles.progressLabel}>de avanço informado</Text></View>
     {['team', 'weather', 'materials', 'occurrences'].map((field, i) => <View key={field}><Text style={styles.caption}>{['Equipe', 'Condições do tempo', 'Materiais utilizados', 'Ocorrências e observações'][i]}</Text><Text style={styles.text}>{content[field] || 'Não informado.'}</Text></View>)}
     <Text style={styles.caption}>Fotos ({content.photos.length})</Text>
     {content.photos.length ? content.photos.map((id, index) => {

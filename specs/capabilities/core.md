@@ -2,7 +2,7 @@
 id: core
 contract_status: implemented
 implementation_status: implemented
-last_verified: 2026-11-06
+last_verified: 2026-11-11
 last_verified_ref: working-tree
 ---
 
@@ -13,6 +13,12 @@ React Native + Expo, entrypoint index.js; componentes em `components/<Nome>/inde
 layout responsivo e alvos de toque com mínimo de 44 pontos para controles principais. Login/cadastro, welcome por perfil,
 guia inicial persistente por conta, dashboard, histórico/calendário, formulário/detalhe, obras e Conta/FAQ.
 Guia pode ser reaberto e fechado na Conta. A pilha por aba e o layout web largo estão descritos em navigation.md. Permissão de câmera somente quando escolhida; galeria múltipla no ImagePicker.
+
+Workfy - Diário de Obra exibe a assinatura visual da Planengen no acesso e na navegação lateral.
+O símbolo também identifica o cabeçalho mobile, o ícone de instalação e o favicon. As telas de
+acesso ficam em duas colunas na web a partir de 900 px. O tema compartilhado usa as cores do
+manual e tons de interação com contraste testado. Manrope é carregada a partir dos arquivos
+distribuídos no app. Ver ADR 010 e `DESIGN.md`.
 
 Evidências atuais em testing.md, incluindo bundles por plataforma, fluxos de navegador e a
 validação física ainda pendente.

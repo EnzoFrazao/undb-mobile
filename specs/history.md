@@ -1,5 +1,13 @@
 # Marcos do projeto
 
+## 2026-11-11 — Identidade visual Planengen
+
+- Assinatura, símbolo, padrão e paleta do manual aplicados ao Diário de Obra Mobile.
+- Acesso em duas colunas na web larga, navegação de marca e destaque para situação e avanço no RDO.
+- Ícone do aplicativo, ícone adaptativo do Android e favicon atualizados.
+- Nome do produto atualizado para Workfy - Diário de Obra no app e nas exportações.
+- Tipografia Manrope na interface e timbrado inspirado na papelaria da Planengen nos PDFs de RDO.
+
 ## 2026-11-06 — Navegação, proteção de alterações e interface
 
 - Pilhas por aba, retorno no cabeçalho e no sistema, sessão local e confirmações de saída.

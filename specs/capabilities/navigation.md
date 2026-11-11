@@ -2,7 +2,7 @@
 id: navigation
 contract_status: implemented
 implementation_status: implemented-with-limitations
-last_verified: 2026-11-06
+last_verified: 2026-11-11
 last_verified_ref: working-tree
 ---
 
@@ -26,7 +26,8 @@ uploads, a navegação interna aguarda a conclusão.
 
 O guia inicial continua obrigatório até ser concluído. O guia reaberto em Conta permite voltar.
 Em telas web a partir de 900 px, a navegação passa para a lateral e a obra aberta pode ser
-consultada ao lado da lista de obras.
+consultada ao lado da lista de obras. A navegação inferior e a lateral usam a cor principal
+da Planengen. A lateral exibe a assinatura da marca com o nome Workfy - Diário de Obra.
 
 Decisões nos ADRs 007, 008 e 009. Para evidência de navegador e limites da verificação nativa,
 consulte testing.md.

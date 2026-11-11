@@ -2,27 +2,35 @@
 
 ## Overview
 
-O Diário de Obra Mobile usa uma linguagem objetiva, confiável e adequada ao uso em campo. O login
-prioriza poucos passos, familiaridade e boa leitura em telas de celular sob luz intensa.
+O Workfy - Diário de Obra usa a identidade visual da Planengen Consultoria e Construção. O azul-marinho
+estrutura a entrada e a navegação, com superfícies claras nos formulários e nas áreas de consulta.
+O login prioriza poucos passos e boa leitura em telas de celular sob luz intensa.
 
 ## Color
 
 | Papel | Cor | Uso |
 |---|---|---|
-| Brand | `#0B3B91` | Cabeçalho e identidade principal |
-| Action | `#2563EB` | Ação primária e foco |
-| Canvas | `#F6F8FC` | Fundo claro da aplicação |
-| Surface | `#FFFFFF` | Campos e superfícies elevadas |
-| Ink | `#0F2747` | Títulos e texto principal |
-| Muted | `#52647C` | Texto de apoio |
+| Brand | `#010028` | Entrada, navegação e cabeçalhos no celular |
+| Accent | `#0084F4` | Símbolo, seleção e indicadores sobre azul-marinho |
+| Action | `#006BC6` | Ação primária com texto branco e foco sobre superfícies claras |
+| Canvas | `#EEF0F2` | Fundo claro da aplicação |
+| Surface | `#FFFFFF` | Campos e cartões |
+| Ink | `#202020` | Títulos e texto principal |
+| Muted | `#4F5D70` | Texto de apoio |
 | Error | `#B42318` | Erros de validação e autenticação |
 | Success | `#15803D` | Confirmação de acesso |
 
 ## Typography
 
-Usar a fonte nativa do sistema. Títulos recebem pesos 700 ou 800; corpo e campos usam tamanho
-mínimo de 16 pontos; textos auxiliares usam 14 pontos somente quando não são essenciais para a
-leitura principal.
+O lettering original da Planengen faz parte do arquivo da assinatura. A interface usa Manrope
+nos pesos Regular, SemiBold, Bold e ExtraBold. Corpo e campos usam 16 pontos, com textos de apoio
+de 14 pontos. O aplicativo distribui os quatro arquivos de fonte com licença SIL Open Font License.
+
+## Relatórios exportados
+
+O timbrado da Planengen orienta o PDF do RDO. O cabeçalho mostra a assinatura da Planengen à
+esquerda e o nome Workfy à direita, com uma linha azul-marinho abaixo. O rodapé repete a indicação
+de cópia para consulta e o número da página em todas as folhas.
 
 ## Spacing and Shape
 
@@ -33,11 +41,12 @@ leitura principal.
 
 ## Components
 
-- `Header`: superfície azul com marca geométrica, nome, título e descrição.
+- `Header` exibe a assinatura Planengen, o padrão geométrico e o nome Workfy - Diário de Obra.
+- `AuthLayout` organiza login, cadastro e boas-vindas em uma coluna no celular e duas a partir de 900 px na web.
 - `LoginScreen`: formulário responsivo com estados de foco, erro e carregamento.
 - `RegisterScreen`: cadastro de Cliente com nome, e-mail, senha e confirmação de senha.
 - `WelcomeScreen`: confirmação do acesso, perfil identificado, mensagem contextual e ação de sair.
-- `Workspace` e `ScreenHeader`: pilhas por aba, título contextual, seta de voltar e navegação inferior ou lateral.
+- `Workspace` e `ScreenHeader` usam o símbolo no cabeçalho mobile e a assinatura na navegação lateral da web.
 - `Toast`, `ErrorState` e `EmptyState`: confirmação, recuperação de falhas e orientação em telas vazias.
 - `StatusBadge` e `Icon`: situação do RDO com cor, ícone e texto.
 - `Calendar`: grade mensal com indicadores e filtro de data.

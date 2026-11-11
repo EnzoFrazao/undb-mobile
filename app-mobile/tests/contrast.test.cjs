@@ -13,8 +13,13 @@ const text = [
   ['placeholder', 'surface'], ['placeholder', 'focusWash'], ['white', 'action'], ['white', 'brand'],
   ['textOnBrand', 'brand'], ['error', 'surface'], ['error', 'errorWash'],
   ['success', 'successWash'], ['warning', 'warningWash'],
+  ['brand', 'accent'], ['textOnBrand', 'brandSelected'], ['white', 'brandSelected'],
+  ['white', 'actionPressed'], ['actionPressed', 'focusWash'],
 ];
-const controls = [['border', 'surface'], ['border', 'canvas'], ['focusBorder', 'surface'], ['focusBorder', 'focusWash']];
+const controls = [
+  ['border', 'surface'], ['border', 'canvas'], ['focusBorder', 'surface'],
+  ['focusBorder', 'focusWash'], ['accent', 'brand'], ['accent', 'brandSelected'],
+];
 
 test('text and control color pairs meet WCAG contrast thresholds', () => {
   for (const [foreground, background, minimum] of [...text.map((pair) => [...pair, 4.5]), ...controls.map((pair) => [...pair, 3])]) {

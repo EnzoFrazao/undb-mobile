@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
+import { Manrope_400Regular } from '@expo-google-fonts/manrope/400Regular';
+import { Manrope_600SemiBold } from '@expo-google-fonts/manrope/600SemiBold';
+import { Manrope_700Bold } from '@expo-google-fonts/manrope/700Bold';
+import { Manrope_800ExtraBold } from '@expo-google-fonts/manrope/800ExtraBold';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppFrame from './components/AppFrame';
@@ -7,11 +12,19 @@ import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import Skeleton from './components/Skeleton';
 import Workspace from './components/Workspace';
+import { expo } from './app.json';
 import { ToastProvider, useToast } from './components/Toast';
 import { API_URL, request, setToken, setUnauthorizedHandler } from './services/api';
 import { createSessionStore } from './services/sessionStore.cjs';
+import { fonts } from './theme/tokens';
 
 const sessions = createSessionStore(AsyncStorage, API_URL);
+const fontAssets = {
+  [fonts.regular]: Manrope_400Regular,
+  [fonts.semibold]: Manrope_600SemiBold,
+  [fonts.bold]: Manrope_700Bold,
+  [fonts.extraBold]: Manrope_800ExtraBold,
+};
 
 function AppContent() {
   const [user, setUser] = useState(null);
@@ -61,15 +74,16 @@ function AppContent() {
     });
   }
 
-  const auth = !restoring && !user;
   let content;
-  if (restoring) content = <Skeleton label="Abrindo Diário de Obra…" />;
+  if (restoring) content = <Skeleton label={`Abrindo ${expo.name}…`} />;
   else if (user) content = <Workspace user={user} skipWelcome={restored || user.guideSeen} restoreTab={restored} onLogout={logout} />;
   else if (screen === 'register') content = <RegisterScreen initial={registerDraft} onDraftChange={setRegisterDraft} onRegistered={register} onLoginPress={() => setScreen('login')} />;
   else content = <LoginScreen initialEmail={loginDraft.email} onEmailChange={(email) => setLoginDraft({ email })} notice={notice} onAuthenticated={login} onRegisterPress={() => { setNotice(''); setScreen('register'); }} />;
-  return <AppFrame auth={auth}>{content}<StatusBar style={auth ? 'light' : 'dark'} /></AppFrame>;
+  return <AppFrame branded={!restoring}>{content}<StatusBar style={restoring ? 'dark' : 'light'} /></AppFrame>;
 }
 
 export default function App() {
+  const [fontsLoaded, fontError] = useFonts(fontAssets);
+  if (!fontsLoaded && !fontError) return null;
   return <SafeAreaProvider><ToastProvider><AppContent /></ToastProvider></SafeAreaProvider>;
 }

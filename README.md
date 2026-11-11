@@ -1,4 +1,4 @@
-# Diário de Obra Mobile
+# Workfy - Diário de Obra
 
 Aplicação da disciplina de Programação Mobile da UNDB: React Native + Expo, com API Node e
 persistência em JSON. Interface pensada para celular; também funciona no navegador do PC.

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Diário de Obra Mobile",
+    "name": "Workfy - Diário de Obra",
     "slug": "diario-de-obra-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,9 +23,8 @@
     "android": {
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#010028",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       }
     },

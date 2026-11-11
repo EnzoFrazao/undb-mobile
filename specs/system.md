@@ -1,6 +1,6 @@
 # Sistema implementado
 
-**Última verificação:** 2026-11-06 · **Referência:** working-tree.
+**Última verificação:** 2026-11-11 · **Referência:** working-tree.
 
 React Native 0.86.3 / React 19.2.3 / Expo SDK 57, JavaScript puro. Entrada:
 `app-mobile/index.js` registra `App.js`. `SafeAreaProvider` e `AppFrame` respeitam as áreas seguras;
@@ -8,6 +8,9 @@ canvas com largura máxima de 480 px até 899 px e 1.280 px a partir de 900 px n
 `expo-image-picker` permite galeria/câmera; não solicita microfone. A navegação usa reducer e pilhas por aba, com BackHandler no Android e History API na web.
 Formulários usam ScrollView, enquanto Obras, Histórico, Avisos e Revisão usam FlatList.
 A navegação fica embaixo no celular e na lateral em telas web largas.
+As telas de acesso usam `AuthLayout` com um painel de marca ao lado do formulário na web larga.
+`app-mobile/theme/palette.cjs` fornece a paleta de interface e os pares usados nos testes de contraste.
+O app carrega quatro pesos locais de Manrope com `expo-font` ao iniciar.
 
 App chama API por `services/api.js`, com timeout padrão de 20 s. A sessão é persistida no AsyncStorage por URL de API,
 com limpeza em 401 da sessão atual ou saída solicitada.

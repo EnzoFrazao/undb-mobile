@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { Animated, AppState, BackHandler, KeyboardAvoidingView, Platform, Pressable, RefreshControl, ScrollView, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, AppState, BackHandler, Image, KeyboardAvoidingView, Platform, Pressable, RefreshControl, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import AccountScreen from '../AccountScreen';
 import ConfirmDialog from '../ConfirmDialog';
 import ErrorState from '../ErrorState';
@@ -17,6 +17,7 @@ import WorkEditor from '../WorkEditor';
 import WorkHistory from '../WorkHistory';
 import WorkList from '../WorkList';
 import { useToast } from '../Toast';
+import { expo } from '../../app.json';
 import { request } from '../../services/api';
 import { reportDraftKey } from '../../services/reportDrafts';
 import { reportStatus } from '../../services/reportStatus.cjs';
@@ -326,7 +327,7 @@ export default function Workspace({ user, onLogout, skipWelcome, restoreTab }) {
       accessibilityState={{ selected: tab === item }}
       style={({ focused, pressed }) => [styles.navItem, wide && styles.sideItem, tab === item && styles.selected, focused && styles.focused, pressed && styles.pressed]}>
       <View style={styles.navIcon}>
-        <Icon name={tabIcons[item]} active={tab === item} />
+        <Icon name={tabIcons[item]} light />
         {!wide && item === 'Avisos' && unreadCount > 0 ? <Text maxFontSizeMultiplier={1.4} style={[styles.badge, styles.mobileBadge]}>{unreadCount}</Text> : null}
       </View>
       <Text maxFontSizeMultiplier={1.4} style={[styles.navLabel, tab === item && styles.navActive]}>{item}</Text>
@@ -335,10 +336,17 @@ export default function Workspace({ user, onLogout, skipWelcome, restoreTab }) {
   </View> : null;
   return <KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
     <View style={[styles.layout, wide && styles.wideLayout]}>
-      {wide ? navigation : null}
+      {wide && navigation ? <View style={styles.sidebar}>
+        <View style={styles.sidebarBrand}>
+          <Image source={require('../../assets/planengen-signature.png')} style={styles.signature} resizeMode="contain"
+            accessible accessibilityLabel="Planengen Consultoria e Construção" />
+          <Text style={styles.sidebarTitle}>{expo.name}</Text>
+        </View>
+        {navigation}
+      </View> : null}
       <View style={styles.main}>
         <ScreenHeader title={header.title} subtitle={header.subtitle || activeUser.roleLabel} back={canBack ? backLabel(nav, metaContext) : null}
-          onBack={back} onLogout={!canBack ? confirmLogout : undefined} busy={busy} />
+          onBack={back} onLogout={!canBack ? confirmLogout : undefined} busy={busy} wide={wide && !showingGuide} />
         {data && connection ? <ErrorState message={`Dados desatualizados desde ${connection.since.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}. ${connection.message}`}
           onRetry={refresh} retryLabel="Tentar agora" /> : null}
         <View style={styles.columns}>
